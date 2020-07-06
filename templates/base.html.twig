@@ -16,15 +16,13 @@
     </head>
     <body>
     <div class="wrapper">
-        <header>
-            <div class="container d-flex justify-content-between">
+        <header class="container d-flex justify-content-between">
                 <a href="{{ path('home') }}" title="Accueil"><img src="{{ asset('img/logo_size_1T.gif') }}" alt="Logo Sortir.com"></a>
                 <nav>
                     <a href="{{ path('home') }}" title="Accueil">Accueil</a>
                     <a href="{#{{ path('user_profile') }} #}" title="Mon profil">Mon profil</a>
                     <a href="{#{{ path('app_logout') }}#}" title="Disconnect">Se déconnecter</a>
                 </nav>
-            </div>
         </header>
 
         {# pass an array argument to get the messages of those types  #}
@@ -36,15 +34,14 @@
             {% endfor %}
         {% endfor %}
 
-        <main>
-            <div class="box container">
-                {% block main %}{% endblock %}
+        <main class="container">
+            <div>
+                {% block main %}Test{% endblock %}
             </div>
         </main>
-        <footer class="box">
-            <div class="container">
-                &copy; {{ "now"|date("Y") }} Sortir.com
-            </div>
+        <footer class="container d-flex justify-content-center">
+            <p class="d-flex align-self-center">&copy; {{ "now"|date("Y") }} Sortir.com</p>
+
         </footer>
     </div>
 
