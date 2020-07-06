@@ -2,11 +2,57 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+        <title>{% block title %}Sortir.com{% endblock %}</title>
+
+        {% block stylesheets %}
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+            <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+            <link rel="icon" href="{{ asset('img/logo_size_1T.gif') }}">
+            <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+    <div class="wrapper">
+        <header>
+            <div class="container d-flex justify-content-between">
+                <a href="{{ path('home') }}" title="Accueil"><img src="{{ asset('img/logo_size_1T.gif') }}" alt="Logo Sortir.com"></a>
+                <nav>
+                    <a href="{{ path('home') }}" title="Accueil">Accueil</a>
+                    <a href="{#{{ path('user_profile') }} #}" title="Mon profil">Mon profil</a>
+                    <a href="{#{{ path('app_logout') }}#}" title="Disconnect">Se déconnecter</a>
+                </nav>
+            </div>
+        </header>
+
+        {# pass an array argument to get the messages of those types  #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <main>
+            <div class="box container">
+                {% block main %}{% endblock %}
+            </div>
+        </main>
+        <footer class="box">
+            <div class="container">
+                &copy; {{ "now"|date("Y") }} Sortir.com
+            </div>
+        </footer>
+    </div>
+
+        {% block javascripts %}
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        {% endblock %}
     </body>
 </html>
+
