@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/eventAdd.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/eventAdd.css') }}" xmlns="http://www.w3.org/1999/html">
 {% endblock %}
 
 {% block main %}
@@ -18,7 +18,7 @@
     <div class="button_center">
         {{ form_row(eventForm.save) }}
         {{ form_row(eventForm.saveAndAdd) }}
-        {{ form_row(eventForm.cancel) }}
+        <button><a href="{{ path('home') }}">Annuler</a></button>
     </div>
     {{ form_end(eventForm) }}
 
