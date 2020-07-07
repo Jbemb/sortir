@@ -2,7 +2,7 @@
 body {
     font-family: 'Roboto Mono', monospace;
     margin: 0;
-    background-image: url("https://source.unsplash.com/1600x900/?student,fun,party,beer"); /* terrible idée niveau performance (pas de cache) */
+    background-image: url("https://source.unsplash.com/1600x900/?student,fun,party"); /* terrible idée niveau performance (pas de cache) */
     background-position: center center;
     background-size: cover;
     background-attachment: fixed;
@@ -65,4 +65,7 @@ footer {
     background-color: #FBFD8A;
     margin-top: 20px;
     opacity: 0.9;
+}
+.alert-success {
+    text-align: center;
 }
