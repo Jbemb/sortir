@@ -22,6 +22,7 @@
                     {% if(app.user) %}
                     <a href="{{ path('home') }}" title="Accueil">Accueil</a>
                     <a href="{{ path('user_update', {'id': app.user.id}) }}" title="Mon profil">Mon profil</a>
+                    <a href="{{ path('event_add') }}" title="Add Event">Ajouter une Sortie</a>
                     <a href="{{ path('app_logout') }}" title="Disconnect">Se déconnecter</a>
                     {% endif %}
                 </nav>
