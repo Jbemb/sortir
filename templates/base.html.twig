@@ -19,9 +19,11 @@
         <header class="container d-flex justify-content-between">
                 <a href="{{ path('home') }}" title="Accueil"><img src="{{ asset('img/logo_size_1T.gif') }}" alt="Logo Sortir.com"></a>
                 <nav>
+                    {% if(app.user) %}
                     <a href="{{ path('home') }}" title="Accueil">Accueil</a>
                     <a href="{#{{ path('user_profile') }} #}" title="Mon profil">Mon profil</a>
                     <a href="{{ path('app_logout') }}" title="Disconnect">Se déconnecter</a>
+                    {% endif %}
                 </nav>
         </header>
 
