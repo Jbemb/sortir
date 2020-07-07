@@ -1,24 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
-    <link rel="icon" href="{{ asset('img/logo_size_1T.gif') }}">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/eventAdd.css') }}">
 {% endblock %}
 
 {% block main %}
 
-
-
     {{ form_start(eventForm) }}
-    {{ form_errors(eventForm) }}
-    {{ form_widget(eventForm) }}
+    {{ form_row(eventForm.name) }}
+    {{ form_row(eventForm.startDateTime) }}
+    {{ form_row(eventForm.inscriptionLimit) }}
+    {{ form_row(eventForm.maxParticipant) }}
+    {{ form_row(eventForm.duration) }}
+    {{ form_row(eventForm.eventInfo) }}
+    {{ form_row(eventForm.place) }}
     <div class="button_center">
-    <button type="submit" value="save">Enregistrer</button>
-    <button type="submit" value="publish">Publier la sortie</button>
-    <button type="submit" value="cancel">Annuler</button>
+        {{ form_row(eventForm.save) }}
+        {{ form_row(eventForm.saveAndAdd) }}
+        {{ form_row(eventForm.cancel) }}
     </div>
     {{ form_end(eventForm) }}
 
