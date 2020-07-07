@@ -29,10 +29,7 @@ class UserController extends AbstractController
      */
     public function userUpdate(EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder)
     {
-        //récupère le UserRepository
-        $userRepo = $this->getDoctrine()->getRepository(User::class);
         $user = $this->security->getUser();
-        dump($user);
         $userUpdateForm = $this->createForm(UserUpdateType::class, $user);
         //récupère les infos inscrit dans le form
         $userUpdateForm->handleRequest($request);
