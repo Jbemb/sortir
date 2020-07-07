@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 
 class UserController extends AbstractController
@@ -26,7 +27,7 @@ class UserController extends AbstractController
     /**
      * @Route("/profil", name="user_update")
      */
-    public function userUpdate(EntityManagerInterface $em, Request $request)
+    public function userUpdate(EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder)
     {
         //récupère le UserRepository
         $userRepo = $this->getDoctrine()->getRepository(User::class);
@@ -37,6 +38,11 @@ class UserController extends AbstractController
         $userUpdateForm->handleRequest($request);
         //vérifie la validiter du formulaire
         if ($userUpdateForm->isSubmitted() && $userUpdateForm->isValid()){
+            //encoder le password modifier ou pas
+            $password = $user->getPassword();
+            $encoded = $encoder->encodePassword($user, $password);
+            $user->setPassword($encoded);
+
             $em->persist($user);
             $em->flush();
 

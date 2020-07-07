@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Campus;
 use App\Entity\User;
+use App\Entity\State;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -21,6 +22,9 @@ class AppFixtures extends Fixture
     {
         $faker = \Faker\Factory::create('fr_FR');
 
+        /*
+         * Campus
+         */
         $campusList = ['Rennes', 'Nantes', 'Niort', 'Quimper'];
         foreach ($campusList as $c) {
             $campus = new Campus();
@@ -37,6 +41,10 @@ class AppFixtures extends Fixture
         foreach ($campus as $c) {
             echo $c->getName() . "\n";
         }
+
+        /*
+         * Users
+         */
 
         $users = [];
         for ($u = 0; $u < 100; $u++) {
@@ -71,8 +79,20 @@ class AppFixtures extends Fixture
             $users[] = $user;
 
         }
-
         $manager->flush();
+
+        /*
+         * States
+         */
+        $stateList = ['Créée', 'Ouverte', 'Clôturée', 'Activité en cours', 'Passée', 'Annulée'];
+        foreach ($stateList as $s) {
+            $state = new State();
+            $state->setName($s);
+
+            $manager->persist($state);
+        }
+        $manager->flush();
+
     }
 
     private function setUsername($user, $count): string
