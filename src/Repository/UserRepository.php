@@ -36,6 +36,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    public function findUserByIdWithCampus($id){
+    $qb = $this->createQueryBuilder('u');
+    $qb->andWhere('u.id = :id')
+        ->setParameter('id', $id)
+        ->join(u.campus_id, 'c')
+        ->addSelect('c');
+
+    $query = $qb->getQuery();
+    }
+
     //Create function find by email or username!!!!!
 
     // /**

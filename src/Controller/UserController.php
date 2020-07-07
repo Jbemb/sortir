@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserUpdateType;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Env\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
@@ -19,7 +19,7 @@ class UserController extends AbstractController
         //récupère le UserRepository
         $UserRepo = $this->getDoctrine()->getRepository(User::class);
         //Requête SQL pour récupérer les infos du user
-        $user = $UserRepo->find($id);
+        $user = $UserRepo->findUserByIdWithCampus($id);
         dump($user);
         //création de mon formulaire
         $UserUpdateForm = $this->createForm(UserUpdateType::class, $user);
@@ -30,12 +30,14 @@ class UserController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            $this->addFlash("success", "Votre profil a été mise à jour");
+            $this->addFlash("success", "Votre profil a été mise à jour.");
             return $this->redirectToRoute('home');
         }
 
         return $this->render('user/update.html.twig', [
             'controller_name' => 'UserController',
+            'user'=>$user,
+            'UserForm'=>$UserUpdateForm->createView(),
         ]);
     }
 
