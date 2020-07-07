@@ -24,27 +24,26 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user-update/{id}", name="user_update")
+     * @Route("/profil", name="user_update")
      */
     public function userUpdate(EntityManagerInterface $em, Request $request)
     {
         //récupère le UserRepository
         $userRepo = $this->getDoctrine()->getRepository(User::class);
-        //Requête SQL pour récupérer les infos du user
-        $user = new User();
         $user = $this->security->getUser();
         dump($user);
         $userUpdateForm = $this->createForm(UserUpdateType::class, $user);
         //récupère les infos inscrit dans le form
         $userUpdateForm->handleRequest($request);
         //vérifie la validiter du formulaire
-        if ($userUpdateForm->isSubmitted()){
+        if ($userUpdateForm->isSubmitted() && $userUpdateForm->isValid()){
             $em->persist($user);
             $em->flush();
 
             $this->addFlash("success", "Votre profil a été mise à jour.");
             return $this->redirectToRoute('home');
         }
+
 
         return $this->render('user/update.html.twig', [
             'controller_name' => 'UserController',
