@@ -27,7 +27,7 @@ class EventType extends AbstractType
                 'label' => 'Date et heure de la sortie'
             ])
             ->add('duration', NumberType::class, [
-                'label' => 'Durée',
+                'label' => 'Durée en minutes',
                 'attr' => ['placeholder' => 90],
                 'attr' => ['min' => 0]
             ])
