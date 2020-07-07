@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class State
 {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -20,7 +21,8 @@ class State
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Id()
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $name;
 
