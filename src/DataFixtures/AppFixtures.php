@@ -16,16 +16,15 @@ class AppFixtures extends Fixture
     {
         $this->encoder = $encoder;
     }
+
     public function load(ObjectManager $manager)
     {
         $faker = \Faker\Factory::create('fr_FR');
 
         $campusList = ['Rennes', 'Nantes', 'Niort', 'Quimper'];
-        foreach ($campusList as $c){
+        foreach ($campusList as $c) {
             $campus = new Campus();
             $campus->setName($c);
-
-            echo $c ."\n";
 
             $manager->persist($campus);
         }
@@ -35,30 +34,61 @@ class AppFixtures extends Fixture
         $campus = $campusRepo->findAll();
 
 
-        foreach ($campus as $c){
+        foreach ($campus as $c) {
             echo $c->getName() . "\n";
         }
 
-        for ($u = 0; $u < 30; $u++){
+        $users = [];
+        for ($u = 0; $u < 100; $u++) {
             $user = new User();
 
             $user->setFirstName($faker->firstName);
             $user->setLastName($faker->lastName);
-            $user->setEmail(strtolower(substr($user->getFirstName(),0,1) . $user->getLastName() . '2020@campus-eni.fr'));
-            $user->setUsername(strtolower(substr($user->getFirstName(),0,1) . $user->getLastName()));
-            $user->setCampus($campus[rand(0,count($campus) - 1)]);
+
+
+            $count = 0;
+            foreach ($users as $us) {
+                if ($us->getLastName() == $user->getLastName() and mb_substr($us->getFirstName(), 0, 1) == mb_substr($user->getFirstName(), 0, 1)) {
+                    $count++;
+                }
+            }
+
+
+            $user->setUsername($this->setUsername($user, $count));
+            $user->setEmail($this->setUsername($user, $count) . '2020@campus-eni.fr');
+            $user->setCampus($campus[rand(0, count($campus) - 1)]);
             $user->setIsActive(true);
             $user->setTelephone($faker->phoneNumber);
             $user->setRoles(['ROLE_USER']);
+
+            echo $user->getFirstName() . ' ' . $user->getLastName() . "\n";
+            echo $user->getUsername() . "\n";
 
             $password = $this->encoder->encodePassword($user, 'toto');
             $user->setPassword($password);
 
             $manager->persist($user);
+            $users[] = $user;
 
-            echo $user->getFirstName() . ' ' . $user->getLastName() . "\n";
         }
 
         $manager->flush();
+    }
+
+    private function setUsername($user, $count): string
+    {
+        return $this->skip_accents(mb_substr($user->getFirstName(), 0, 1) . $user->getLastName() . ($count == 0 ? '' : $count));
+    }
+
+    private function skip_accents($str, $charset = 'utf-8')
+    {
+
+        $str = htmlentities($str, ENT_NOQUOTES, $charset);
+
+        $str = preg_replace('#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+        $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str);
+        $str = preg_replace('#&[^;]+;#', '', $str);
+
+        return $str;
     }
 }
