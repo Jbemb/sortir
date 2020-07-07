@@ -78,6 +78,11 @@ class Event
      */
     private $participants;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $reasonDelete;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -230,6 +235,18 @@ class Event
         if ($this->participants->contains($participant)) {
             $this->participants->removeElement($participant);
         }
+
+        return $this;
+    }
+
+    public function getReasonDelete(): ?string
+    {
+        return $this->reasonDelete;
+    }
+
+    public function setReasonDelete(?string $reasonDelete): self
+    {
+        $this->reasonDelete = $reasonDelete;
 
         return $this;
     }

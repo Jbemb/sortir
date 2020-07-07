@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Event;
+use App\Form\CancelEventType;
 use App\Form\EventType;
+use App\Repository\EventRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class EventController extends AbstractController
@@ -19,4 +23,27 @@ class EventController extends AbstractController
             'eventForm' => $eventForm->createView()
         ]);
     }
+
+    /**
+     * @Route("/sortie/cancel/{id}", name="event_cancel" methods={"GET", "POST"})
+     */
+    public function cancel($id, EventRepository $repo, Request $request)
+    {
+        $repo = $this->getDoctrine()->getRepository(Event::class);
+        $event = $repo->find($id);
+
+        $cancelEventForm = $this->createForm(CancelEventType::class);
+      //  $cancelEventForm->handleRequest($request);
+
+
+        $cancelEventFormView = $cancelEventForm->createView();
+
+
+
+        return $this->render('event/cancel.html.twig', compact('cancelEventFormView','event'));
+    }
+
 }
+
+
+
