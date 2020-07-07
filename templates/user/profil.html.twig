@@ -1,1 +1,35 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | Profil de {{ user.username }}{% endblock %}
+{% block main %}
+    <div class="d-flex justify-content-center">
+        <h1 class="p-3">{{ user.username | capitalize }}</h1>
+    </div>
+    <div class="container">
+        <div class="row">
+            <img class="col-3" src="{{ asset('img/profil.jpg') }}" alt="photo profil">
+            <div class="col-9">
+                <div class="row p-2">
+                    <div class="col-4">Prénom :</div>
+                    <div class="col-8">{{ user.firstname | capitalize }}</div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">Nom :</div>
+                    <div class="col-8">{{ user.lastname | capitalize }}</div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">Téléphone :</div>
+                    <div class="col-8">{{ user.telephone }}</div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">Email :</div>
+                    <div class="col-8">{{ user.email }}</div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">Campus :</div>
+                    <div class="col-8">{{ user.campus.name |capitalize }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

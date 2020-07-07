@@ -6,6 +6,6 @@
     {{ form_start(UserForm) }}
     {{ form_widget(UserForm) }}
     <button type="submit" class="btn">Enregistrer</button>
-    <input type="button">
+    <input type="button" href="{{ path('home') }}" value="Annuler">
     {{ form_end(UserForm) }}
 {% endblock %}
