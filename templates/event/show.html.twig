@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">Nom de la sortie :</div>
+                    <div class="col-6">{{ event.name }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Date et heure de la sortie :</div>
+                    <div class="col-6">{{ event.startDateTime | date ("d/M/y h:i:s") }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Date limite d'inscription :</div>
+                    <div class="col-6">{{ event.inscriptionLimit }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Nombre de places :</div>
+                    <div class="col-6">{{ event.maxParticipant }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Durée :</div>
+                    <div class="col-6">{{ event.duration }} minutes</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Campus :</div>
+                    <div class="col-6">{{ event.campus.name }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-12">Description et infos :</div>
+                    <div class="col-12">{{ event.eventInfo }}</div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div>
+                    <h2>Liste des participants inscrits :</h2>
+                    <div class="row">
+                        <div class="col-4"><strong>Pseudo</strong></div>
+                        <div class="col-8"><strong>Nom</strong></div>
+                    </div>
+                    {% for event.participants as participant %}
+                        <div class="row">
+                            <div class="col-4">{{ participant.username }}</div>
+                            <div class="col-8">{{ participant.firstname }} {{ participant.lastname }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}
+    parent() - Sortie {{ event.name }}
+{% endblock %}
+
