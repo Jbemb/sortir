@@ -22,6 +22,7 @@
                     {% if(app.user) %}
                     <a href="{{ path('home') }}" title="Accueil">Accueil</a>
                     <a href="{{ path('user_update')}}" title="Mon profil">Mon profil</a>
+                    <a href="{{ path('event_add') }}" title="Add Event">Ajouter une Sortie</a>
                     <a href="{{ path('app_logout') }}" title="Disconnect">Se déconnecter</a>
                     {% endif %}
                 </nav>
@@ -37,7 +38,9 @@
         {% endfor %}
 
         <main class="container">
+            <div>
                 {% block main %}Test{% endblock %}
+            </div>
         </main>
         <footer class="container d-flex justify-content-center">
             <p class="d-flex align-self-center">&copy; {{ "now"|date("Y") }} Sortir.com</p>
