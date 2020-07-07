@@ -52,7 +52,7 @@ class User implements UserInterface
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $email;
 
@@ -163,7 +163,7 @@ class User implements UserInterface
 
     public function setLastName(string $lastName): self
     {
-        $this->lastName = strtolower($lastName);
+        $this->lastName = mb_strtolower($lastName);
 
         return $this;
     }
@@ -175,7 +175,7 @@ class User implements UserInterface
 
     public function setFirstName(string $firstName): self
     {
-        $this->firstName = strtolower($firstName);
+        $this->firstName = mb_strtolower($firstName);
 
         return $this;
     }
