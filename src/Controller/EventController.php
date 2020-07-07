@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\State;
 use App\Form\EventType;
 use App\Repository\StateRepository;
 use App\Repository\UserRepository;
