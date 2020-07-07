@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserUpdateType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,12 +54,20 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user-profil/{id}", name="user_profil")
+     * @Route("/user/{id}", name="user_profil")
      */
-    public function userProfil($id)
+    public function userProfil($id, UserRepository $userRepository)
     {
+//        $user = $userRepository->findUserByIdWithCampus($id);
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException(
+                'Utilisateur inconnu'
+            );
+        }
         return $this->render('user/profil.html.twig', [
-            'controller_name' => 'UserController',
+            'user'              => $user
         ]);
     }
 }
