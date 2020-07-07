@@ -40,16 +40,15 @@ class EventController extends AbstractController
 
         if ($eventForm->isSubmitted() && $eventForm->isValid()) {
             $state = new State;
+            $state = $stateRepo->findOneBy(['name' => 'Créée']);
 
             if ($eventForm->get('saveAndAdd')->isClicked()) {
                 $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
-
-            } elseif ($eventForm->get('save')->isClicked()) {
-                $state = $stateRepo->findOneBy(['name' => 'Créée']);
             }
             $event->setState($state);
             $em->persist($event);
             $em->flush();
+
             $this->addFlash("success", "Sortie enregistréé");
             return $this->redirectToRoute("event_post", ["id" => $event->getId()]);
 
