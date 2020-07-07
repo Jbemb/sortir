@@ -1,11 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent()}} | Mon profil{% endblock %}
+{% block title %}{{ parent() }} | Mon profil{% endblock %}
 
 {% block main %}
+    <h1>Mon profil</h1>
     {{ form_start(UserForm) }}
     {{ form_widget(UserForm) }}
     <button type="submit" class="btn">Enregistrer</button>
-    <input type="button">
+    <button type="button"><a href="{{ path('home') }}">Annuler</a></button>
+
     {{ form_end(UserForm) }}
 {% endblock %}

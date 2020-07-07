@@ -4,29 +4,42 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserUpdateType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Security;
 
 class UserController extends AbstractController
 {
+
+    private $security;
     /**
-     * @Route("/user-update/{id}", name="user_update")
+     * Constructeur pour récupérer le user
      */
-    public function userUpdate($id, EntityManagerInterface $em, Request $request)
+    public function __construct(Security $security)
     {
-        //récupère le UserRepository
-        $UserRepo = $this->getDoctrine()->getRepository(User::class);
-        //Requête SQL pour récupérer les infos du user
-        $user = $UserRepo->findUserByIdWithCampus($id);
-        dump($user);
-        //création de mon formulaire
-        $UserUpdateForm = $this->createForm(UserUpdateType::class, $user);
+        $this->security = $security;
+    }
+
+    /**
+     * @Route("/profil", name="user_update")
+     */
+    public function userUpdate(EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $encoder)
+    {
+        $user = $this->security->getUser();
+        $userUpdateForm = $this->createForm(UserUpdateType::class, $user);
         //récupère les infos inscrit dans le form
-        $UserUpdateForm->handleRequest($request);
+        $userUpdateForm->handleRequest($request);
         //vérifie la validiter du formulaire
-        if ($UserUpdateForm->isSubmitted()){
+        if ($userUpdateForm->isSubmitted() && $userUpdateForm->isValid()){
+            //encoder le password modifier ou pas
+            $password = $user->getPassword();
+            $encoded = $encoder->encodePassword($user, $password);
+            $user->setPassword($encoded);
+
             $em->persist($user);
             $em->flush();
 
@@ -34,20 +47,29 @@ class UserController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
+
         return $this->render('user/update.html.twig', [
             'controller_name' => 'UserController',
             'user'=>$user,
-            'UserForm'=>$UserUpdateForm->createView(),
+            'UserForm'=>$userUpdateForm->createView(),
         ]);
     }
 
     /**
-     * @Route("/user-profil/{id}", name="user_profil")
+     * @Route("/user/{id}", name="user_profil")
      */
-    public function userProfil($id)
+    public function userProfil($id, UserRepository $userRepository)
     {
+//        $user = $userRepository->findUserByIdWithCampus($id);
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException(
+                'Utilisateur inconnu'
+            );
+        }
         return $this->render('user/profil.html.twig', [
-            'controller_name' => 'UserController',
+            'user'              => $user
         ]);
     }
 }
