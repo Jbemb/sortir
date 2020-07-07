@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Campus;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -37,11 +39,15 @@ class UserUpdateType extends AbstractType
                 'first_options'=>['label'=>'Mot de passe'],
                 'second_options'=>['label'=>'Confirmation'],
                 'required'=>true,
-                ''
+                'invalid_message'=>'les mots de pase doivent être identiques.'
             ])
 
-            ->add('campus', ChoiceType::class, [
-                'label'=>'Campus'
+            ->add('campus', EntityType::class, [
+                'label'=>'Campus',
+                'class'=> Campus::class,
+                'choice_label'=>'name',
+                'disabled'=>true,
+
             ])
 
         ;

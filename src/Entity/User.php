@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -21,6 +22,8 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @Assert\Length(min="2", minMessage="Votre pseudo est trop court")
+     * @Assert\NotBlank(message="Noter votre pseudo")
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
@@ -37,21 +40,27 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @Assert\Length(min="1", minMessage="Votre nom est trop court")
+     * @Assert\NotBlank(message="Noter votre nom")
      * @ORM\Column(type="string", length=255)
      */
     private $lastName;
 
     /**
+     * @Assert\Length(min="1", minMessage="Votre nom est trop court")
+     * @Assert\NotBlank(message="Noter votre nom")
      * @ORM\Column(type="string", length=255)
      */
     private $firstName;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255)
      */
     private $telephone;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, unique=true)
      */
     private $email;
