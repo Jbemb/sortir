@@ -50,8 +50,9 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         $credentials = [
             //@todo check for email authentification option
             'username' => $request->request->get('username'),
-            'password' => $request->request->get('password'),
-            'csrf_token' => $request->request->get('_csrf_token'),
+
+            'password'=> $request->request->get('password'),
+            'csrf_token'=> $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
             Security::LAST_USERNAME,
@@ -69,11 +70,12 @@ class LoginAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         }
         // check if we need something for the email authentification
         //call the function created in UserRepository instead of findOneBy
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
+       // $user = $this->entityManager->getRepository(User::class)-> findOneBy(['username' => $credentials['username']]);
+        $user= $this->entityManager->getRepository(User::class)->loadUserByUsername($credentials['username']);
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Username could not be found.');
+            throw new CustomUserMessageAuthenticationException('Username or email could not be found.');
         }
 
         return $user;
