@@ -76,13 +76,14 @@ class EventController extends AbstractController
         $event = $eventRepository->find($id);
 
         $event->addParticipant($user);
+        // TODO get functin to check if the number signed up is the same as the max
 
         $em->persist($event);
         $em->flush();
 
         $this->addFlash('success', 'Vous vous êtes inscrit à la sortie : ' . $event->getName());
 
-        // TODO redirect vers page d'affichage
+        return  $this->redirectToRoute('home');
     }
 
     /**
@@ -145,6 +146,9 @@ class EventController extends AbstractController
 
         //update event participants
         $event->removeParticipant($user);
+
+        //ToDo function to check if max participants is greater than number signed-up
+
         //update state
         $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
         $event->setState($state);
@@ -154,6 +158,6 @@ class EventController extends AbstractController
         $em -> flush($event);
 
         $this->addFlash("success", "Vous vous êtes désinscrit(e)");
-        return $this->render('main/index.html.twig');
+        return  $this->redirectToRoute('home');
     }
 }
