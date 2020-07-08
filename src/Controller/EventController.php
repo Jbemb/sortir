@@ -55,7 +55,7 @@ class EventController extends AbstractController
             $em->flush();
 
             $this->addFlash("success", "Sortie enregistréé");
-            return $this->redirectToRoute("event_post", ["id" => $event->getId()]);
+            return $this->redirectToRoute("event_show", ["id" => $event->getId()]);
 
         }
 
