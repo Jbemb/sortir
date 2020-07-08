@@ -213,7 +213,7 @@ class Event
         return $this->state;
     }
 
-    public function setState(?State $state): self
+    public function setState(State $state): self
     {
         $this->state = $state;
 

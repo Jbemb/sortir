@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\State;
 use App\Repository\EventRepository;
 use App\Repository\StateRepository;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -23,30 +24,35 @@ class EventChangeState
      */
     public function changeState()
     {
+        $em = $this->doctrine->getManager();
+
         //Récupérer tous les events ouverts.
         $stateRepo = $this->doctrine->getRepository(State::class);
-        $stateOpen = $stateRepo->findBy(['name' => 'Ouverte']);
-        $stateClose = $stateRepo->findBy(['name' => 'Clôturée']);
+        $stateOpen = $stateRepo->findOneBy(['name' => 'Ouverte']);
+        $stateClose = $stateRepo->findOneBy(['name' => 'Clôturée']);
+        dump($stateClose);
+//        $stateObject = new State();
+//        foreach ($stateClose as $key=>$value){
+//            $stateObject->$key=$value;
+//        }
+        //dump($stateObject);
+
+        //Passage de ouverts à clôturé
         $eventRepo = $this->doctrine->getRepository(Event::class);
         $events = $eventRepo->findBy(['state' => $stateOpen]);
 
-
-        //Passage de ouverts à clôturé
         //nbInscrits=nbMaxInscrits ou date > dateClôture
-        $em = $this->doctrine->getManager();
-
-        foreach ($events as $event){
-            if ( getdate() > $event->getInscriptionLimit()){
+        foreach ($events as $event) {
+        $participantFull = $this->isFull($event);
+        dump($participantFull);
+            if (new DateTime() > $event->getInscriptionLimit() || $participantFull==true) {
                 $event->setName('Essai2');
-
-
-                //$event->setState($stateClose);
-
+                $event->setState($stateClose);
+                $em->persist($event);
             }
-/*            $em->persist($events);
-            $em->flush();*/
-
         }
+        $em->flush();
+        dump($events);
 
         //Passage de clôturé à ouverts
         //nbInscrits<nbMaxInscrits et date <= dateClôture
@@ -60,20 +66,18 @@ class EventChangeState
      * returns a boolean
      * true if the number of participants is equal to the inscription limit
      */
-    public function isFull($event){
+    public function isFull($event)
+    {
         $isFull = true;
-        $maxParticipants = $event->getInscriptionLimit();
+        $maxParticipants = $event->getMaxParticipant();
         $numParticipants = count($event->getParticipants());
 
-        if($numParticipants < $maxParticipants){
+        if ($numParticipants < $maxParticipants) {
             $isFull = false;
         }
 
         return $isFull;
     }
-
-
-
 
 
 }
