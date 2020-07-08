@@ -72,3 +72,18 @@ footer {
 .alert-warning {
     text-align: center;
 }
+.button_center {
+    display: flex;
+    justify-content: space-evenly;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #086972;
+    border-color: #086972;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #01A9B4FF;
+    border-color: #01A9B4FF;
+}

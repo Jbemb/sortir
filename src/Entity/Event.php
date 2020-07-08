@@ -27,7 +27,7 @@ class Event
     private $name;
 
     /**
-     * @Assert\GreaterThan("today")
+     * @Assert\GreaterThan("now")
      * @ORM\Column(type="datetime")
      */
     private $startDateTime;
@@ -39,7 +39,7 @@ class Event
     private $duration;
 
     /**
-     * @Assert\GreaterThan("today")
+     * @Assert\GreaterThan("yesterday")
      * @ORM\Column(type="date")
      */
     private $inscriptionLimit;
