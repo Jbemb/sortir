@@ -1,9 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/cancelEvent.css') }}" xmlns="http://www.w3.org/1999/html">
-{% endblock %}
+
 
 {% block title %}Annuler une sortie{% endblock %}
 
@@ -14,10 +11,19 @@
     <p>Date de la sortie : {{ event.startDateTime|date("Y-m-d H:i:s") }} </p>
     <p>Campus: {{ event.campus.name }} </p>
     <p>Lieu : {{ event.place.name}} </p>
-    <div class="justify-content-center">
-        {{ form(cancelEventFormView) }}
-        <button class="btn-secondary btn"><a href="{{ path('home')}}"></a>Annuler</button>
+
+
+         {{ form_start(cancelEventFormView) }}
+         {{ form_row(cancelEventFormView.reasonDelete) }}
+    <div class="button_center">
+        {{ form_row(cancelEventFormView.Enregistrer) }}
+        {{ form_end(cancelEventFormView) }}
+
+     <a href="{{ path('home') }}"><button class="btn btn-secondary">Annuler</button></a>
+
     </div>
+
+
 
 
 

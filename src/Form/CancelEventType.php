@@ -19,7 +19,8 @@ class CancelEventType extends AbstractType
             ->add('reasonDelete', TextareaType::class, [
                 'label' => 'Motif : '
             ])
-            ->add('Enregistrer', SubmitType::class);
+            ->add('Enregistrer', SubmitType::class)
+            ->getForm();
     }
 
     public function configureOptions(OptionsResolver $resolver)
