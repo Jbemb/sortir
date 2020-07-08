@@ -26,7 +26,6 @@ class EventChangeState
         //Récupérer tous les events ouverts.
         $stateRepo = $this->doctrine->getRepository(State::class);
         $stateOpen = $stateRepo->findBy(['name' => 'Ouverte']);
-        $stateClose1 = new State();
         $stateClose = $stateRepo->findBy(['name' => 'Clôturée']);
         $eventRepo = $this->doctrine->getRepository(Event::class);
         $events = $eventRepo->findBy(['state' => $stateOpen]);
@@ -35,9 +34,14 @@ class EventChangeState
         //Passage de ouverts à clôturé
         //nbInscrits=nbMaxInscrits ou date > dateClôture
         $em = $this->doctrine->getManager();
+
         foreach ($events as $event){
-            if ($event->getInscriptionLimit() > getdate()){
-                $event->setState($stateClose);
+            if ( getdate() > $event->getInscriptionLimit()){
+                $event->setName('Essai2');
+
+
+                //$event->setState($stateClose);
+
             }
 /*            $em->persist($events);
             $em->flush();*/
