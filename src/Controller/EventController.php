@@ -99,7 +99,6 @@ class EventController extends AbstractController
             "event" => $event
         ]);
     }
-}
 
     /**
      * @Route("/sortie/cancel/{id}", name="event_cancel", methods={"GET", "POST"})

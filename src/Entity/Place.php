@@ -19,6 +19,7 @@ class Place
      */
     private $id;
 
+    // TODO UNIQUE ?
     /**
      * @ORM\Column(type="string", length=255)
      */
