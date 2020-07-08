@@ -21,7 +21,7 @@ class State
     private $id;
 
     /**
-     * @ORM\Id()
+     *
      * @ORM\Column(type="string", length=255, unique=true)
      */
     private $name;
