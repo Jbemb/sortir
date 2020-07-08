@@ -2,7 +2,7 @@
 body {
     font-family: 'Roboto Mono', monospace;
     margin: 0;
-    background-image: url("https://source.unsplash.com/1600x900/?student,fun,party,beer"); /* terrible idée niveau performance (pas de cache) */
+    background-image: url("https://source.unsplash.com/1600x900/?student,fun,party"); /* terrible idée niveau performance (pas de cache) */
     background-position: center center;
     background-size: cover;
     background-attachment: fixed;
@@ -30,7 +30,9 @@ header {
 }
 
 header img {
-    height: 75px;
+    height: 60px;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
 
 nav a {
@@ -53,8 +55,7 @@ nav a:hover {
 main
  */
 main {
-    background-color: white;
-    opacity: 0.9;
+    background-color: #FFFFFFEE;
     flex-grow: 1;
 }
 
@@ -62,7 +63,12 @@ main {
 footer
  */
 footer {
-    background-color: #FBFD8A;
+    background-color: #FBFD8AEE;
     margin-top: 20px;
-    opacity: 0.9;
+}
+.alert-success {
+    text-align: center;
+}
+.alert-warning {
+    text-align: center;
 }
