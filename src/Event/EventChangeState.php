@@ -26,40 +26,61 @@ class EventChangeState
     {
         $em = $this->doctrine->getManager();
 
-        //Récupérer tous les events ouverts.
+        //Récupérer tous les states.
         $stateRepo = $this->doctrine->getRepository(State::class);
         $stateOpen = $stateRepo->findOneBy(['name' => 'Ouverte']);
         $stateClose = $stateRepo->findOneBy(['name' => 'Clôturée']);
-        dump($stateClose);
-//        $stateObject = new State();
-//        foreach ($stateClose as $key=>$value){
-//            $stateObject->$key=$value;
-//        }
-        //dump($stateObject);
+        $stateOnGoing = $stateRepo->findOneBy(['name'=>'Activité en cours']);
+
 
         //Passage de ouverts à clôturé
         $eventRepo = $this->doctrine->getRepository(Event::class);
-        $events = $eventRepo->findBy(['state' => $stateOpen]);
+        $eventsOpen = $eventRepo->findBy(['state' => $stateOpen]);
 
         //nbInscrits=nbMaxInscrits ou date > dateClôture
-        foreach ($events as $event) {
-        $participantFull = $this->isFull($event);
-        dump($participantFull);
-            if (new DateTime() > $event->getInscriptionLimit() || $participantFull==true) {
-                $event->setName('Essai2');
+        foreach ($eventsOpen as $event) {
+        $Full = $this->isFull($event);
+            if (new DateTime() > $event->getInscriptionLimit() || $Full==true) {
+                $event->setName('ouvert à clôturé');
                 $event->setState($stateClose);
                 $em->persist($event);
             }
         }
         $em->flush();
-        dump($events);
+
 
         //Passage de clôturé à ouverts
+        $eventsClose = $eventRepo->findBy(['state'=>$stateClose]);
         //nbInscrits<nbMaxInscrits et date <= dateClôture
+        foreach ($eventsClose as $event){
+            $notFull = $this->isFull($event);
+            if (new DateTime() <= $event->getInscriptionLimit() ||$notFull==false){
+                $event->setName('Clôturé à ouvert');
+                $event->setState($stateOpen);
+                $em->persist($event);
+            }
+        }
+        $em->flush();
 
+        //Passage de clôturée à activité en cours
+        $eventsClose2 = $eventRepo->findBy(['state'=>$stateClose]);
+        foreach ($eventsClose2 as $event){
+//            $enCours = $this->isEnCours($event);
+//            if ($enCours==true){
+//                $event->setState($stateOnGoing);
+//                $em->persist($event);
+//            }
+        }
+        $em->flush();
+        dump($eventsClose2);
 
-        return $events;
+        //Passage de activité en cours à Activité terminée
+
+        return $eventsClose2;
     }
+
+
+
 
     /*
      * takes an $event
@@ -106,9 +127,16 @@ class EventChangeState
         $isEnCours = true;
         // saved in database with seconds
         $start = $event->getStartDateTime();
+        dump($start);
         // duration is stored in minutes, so I turn it to seconds
-        $duration =$event->getDuration() * 60;
-        $end = $start + $duration;
+        //$duration =$event->getDuration() * 60;
+        $duration = $event->getDuration();
+        $dateInterval = new \DateInterval('PT'.$duration.'I');
+        dump($duration);
+        dump($dateInterval);
+        $end = $start->add($dateInterval);
+        dump($end);
+        //$end = $start + $duration;
         $now = new \DateTime();
 
         if ($now < $start || $now > $end) {

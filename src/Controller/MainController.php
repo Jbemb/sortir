@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Entity\State;
+use App\Event\EventChangeState;
 use App\Repository\EventRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,9 +15,9 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(Request $request, EventRepository $eventRepository)
+    public function index(Request $request, EventChangeState $eventChangeState)
     {
-
+        $events = $eventChangeState->changeState();
 
 
         return $this->render('main/index.html.twig', [
