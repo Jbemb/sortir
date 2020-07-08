@@ -5,19 +5,26 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+        <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ asset('img/favicon/site.webmanifest') }}">
+        <link rel="mask-icon" href="{{ asset('img/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+
         <title>{% block title %}Sortir.com{% endblock %}</title>
 
         {% block stylesheets %}
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
             <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
-            <link rel="icon" href="{{ asset('img/logo_size_1T.gif') }}">
             <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         {% endblock %}
     </head>
     <body>
     <div class="wrapper">
         <header class="container d-flex justify-content-between">
-                <a href="{{ path('home') }}" title="Accueil"><img src="{{ asset('img/logo_size_1T.gif') }}" alt="Logo Sortir.com"></a>
+                <a href="{{ path('home') }}" title="Accueil"><img src="{{ asset('img/logo_title.png') }}" alt="Logo Sortir.com"></a>
                 <nav>
                     {% if(app.user) %}
                     <a href="{{ path('home') }}" title="Accueil">Accueil</a>
