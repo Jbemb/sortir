@@ -55,7 +55,22 @@ class EventChangeState
         return $events;
     }
 
+    /*
+     * takes an $event
+     * returns a boolean
+     * true if the number of participants is equal to the inscription limit
+     */
+    public function isFull($event){
+        $isFull = true;
+        $maxParticipants = $event->getInscriptionLimit();
+        $numParticipants = count($event->getParticipants());
 
+        if($numParticipants < $maxParticipants){
+            $isFull = false;
+        }
+
+        return $isFull;
+    }
 
 
 
