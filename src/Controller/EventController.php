@@ -71,16 +71,15 @@ class EventController extends AbstractController
      *     requirements={"id"="\d+"}
      *     )
      */
-    public function signUp($id, EventRepository $eventRepository, EntityManagerInterface $em, UserRepository $userRepository, StateRepository $stateRepo)
+    public function signUp($id, EventRepository $eventRepository, EntityManagerInterface $em, UserRepository $userRepository, StateRepository $stateRepo, EventChangeState $ecs)
     {
         $user = $userRepository->findOneBy(['username' => $this->security->getUser()->getUsername()]) ;
         $event = $eventRepository->find($id);
         //double check that event is open
-        if($event->getState() == 'Ouverte'){
+        if($event->getState()->getName() == 'Ouverte'){
             $event->addParticipant($user);
 
             //check if it is full and change status if needed
-             $ecs = new EventChangeState();
              if($ecs->isFull($event)){
                  $state = $stateRepo->findOneBy(['name' => 'Clôturée']);
                  $event->setState($state);
