@@ -3,10 +3,14 @@
 namespace App\DataFixtures;
 
 use App\Entity\Campus;
+use App\Entity\City;
+use App\Entity\Event;
+use App\Entity\Place;
 use App\Entity\User;
 use App\Entity\State;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
@@ -20,7 +24,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $faker = \Faker\Factory::create('fr_FR');
+        $faker = Factory::create('fr_FR');
 
         /*
          * Campus
@@ -41,6 +45,43 @@ class AppFixtures extends Fixture
         foreach ($campus as $c) {
             echo $c->getName() . "\n";
         }
+
+        /*
+        * Cities
+        */
+        $cityList = ['Chicago', 'Rennes', 'Nantes', 'Seoul', 'Kiev', 'Bloomer'];
+        $zipCodeList = [60007, 35000, 44000, 100011, 01001, 54724];
+        for ($x = 0; $x < count($cityList); $x++) {
+            $city = new City();
+            $city->setName($cityList[$x]);
+            $city->setPostalCode($zipCodeList[$x]);
+            $manager->persist($city);
+        }
+        $manager->flush();
+
+        $cityRepo = $manager->getRepository(City::class);
+        $cities = $cityRepo->findAll();
+
+        /*
+         * Places
+         */
+        $placeNames = ['plage', 'bar', 'bowling', 'ballade', 'chez Lulu', 'Réu CDA', 'quartier du coin', 'au bar de la rue qui tourne'];
+
+
+        foreach ($placeNames as $placeName) {
+            $place = new Place();
+
+            $place->setCity($cities[rand(0, count($cities) - 1)]);
+            $place->setLatitude($faker->latitude);
+            $place->setLongitude($faker->longitude);
+            $place->setName($placeName);
+            $place->setStreet($faker->streetAddress);
+            $manager->persist($place);
+        }
+        $manager->flush();
+
+        $placeRepo = $manager->getRepository(Place::class);
+        $places = $placeRepo->findAll();
 
         /*
          * Users
@@ -81,6 +122,9 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
 
+        $userRepo = $manager->getRepository(User::class);
+        $users = $userRepo->findAll();
+
         /*
          * States
          */
@@ -93,6 +137,40 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
 
+        $stateRepo = $manager->getRepository(State::class);
+        $states = $stateRepo->findAll();
+
+
+        /*
+         * Events
+         */
+
+        for ($i = 0; $i < 50; $i++) {
+            $event = new Event();
+            $event->setName($faker->sentence(5,true));
+            $event->setStartDateTime($faker->dateTimeBetween('+10 hours', '+150 days'));
+            $date = $event->getStartDateTime();
+            $event->setDuration($faker->numberBetween(30, 300));
+            $event->setInscriptionLimit(date_sub($date, date_interval_create_from_date_string(rand(1, 9) . " hours")));
+            $event->setMaxParticipant(rand(4, 20));
+            $event->setEventInfo($faker->sentence(30, true));
+            $event->setPlace($places[rand(0, count($places) - 1)]);
+            $event->setCampus($campus[rand(0, count($campus) - 1)]);
+            $event->setOrganiser($users[rand(0, count($users) - 1)]);
+            $event->setState($states[rand(0, count($states) - 1)]);
+
+            $nbParticpants = rand(0, $event->getMaxParticipant());
+            for ($j = 0; $j < $nbParticpants; $j++) {
+                $event->addParticipant($users[rand(0, count($users) - 1)]);
+            }
+
+            if ($event->getState()->getName() == 'Annulée'){
+                $event->setReasonDelete($faker->sentence(30, true));
+            }
+
+            $manager->persist($event);
+        }
+        $manager->flush();
     }
 
     private function setUsername($user, $count): string
