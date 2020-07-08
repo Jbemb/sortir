@@ -79,5 +79,42 @@ class EventChangeState
         return $isFull;
     }
 
+    /*
+     * takes an $event
+     * returns a boolean
+     * true if the current date is past the date of inscription
+     */
+    public function isPassedInscription($event)
+    {
+        $ispassed = true;
+        $inscriptionDate = $event->getInscriptionLimit();
+        $now = new \DateTime();
+
+        if ($inscriptionDate > $now) {
+            $isPassed = false;
+        }
+
+        return $isPassed;
+    }
+    /*
+     * takes an $event
+     * returns a boolean
+     * true if the event is en cours
+     */
+    public function isEnCours($event)
+    {
+        $isEnCours = true;
+        // saved in database with seconds
+        $start = $event->getStartDateTime();
+        // duration is stored in minutes, so I turn it to seconds
+        $duration =$event->getDuration() * 60;
+        $end = $start + $duration;
+        $now = new \DateTime();
+
+        if ($now < $start || $now > $end) {
+            $isEnCours = false;
+        }
+        return $isEnCours;
+    }
 
 }
