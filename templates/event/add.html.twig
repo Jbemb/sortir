@@ -18,7 +18,9 @@
     <div class="button_center">
         {{ form_row(eventForm.save) }}
         {{ form_row(eventForm.saveAndAdd) }}
-        <button><a href="{{ path('home') }}">Annuler</a></button>
+        <div class="form-group">
+        <button class="btn btn-primary"><a href="{{ path('home') }}"></a>Annuler</button>
+        </div>
     </div>
     {{ form_end(eventForm) }}
 

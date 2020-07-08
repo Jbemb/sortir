@@ -36,12 +36,12 @@ class EventController extends AbstractController
         $event->setCampus($user->getCampus());
         $eventForm = $this->createForm(EventType::class, $event);
 
-        $eventForm -> handleRequest($request);
+        $eventForm->handleRequest($request);
 
         if ($eventForm->isSubmitted() && $eventForm->isValid()){
             $state= new State;
 
-            if($eventForm->get('saveAndAdd')->isClicked()){
+            if ($eventForm->get('saveAndAdd')->isClicked()) {
                 $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
 
             }elseif ($eventForm->get('save')->isClicked()){
@@ -50,6 +50,7 @@ class EventController extends AbstractController
             $event->setState($state);
             $em->persist($event);
             $em->flush();
+
             $this->addFlash("success", "Sortie enregistréé");
             return $this->redirectToRoute("event_post", ["id" => $event->getId()]);
 
@@ -98,7 +99,7 @@ class EventController extends AbstractController
 }
 
     /**
-     * @Route("/sortie/cancel/{id}", name="event_cancel" methods={"GET", "POST"})
+     * @Route("/sortie/cancel/{id}", name="event_cancel", methods={"GET", "POST"})
      */
     public function cancel($id, EventRepository $repo, Request $request)
     {
@@ -106,12 +107,12 @@ class EventController extends AbstractController
         $event = $repo->find($id);
 
         $cancelEventForm = $this->createForm(CancelEventType::class);
-      //  $cancelEventForm->handleRequest($request);
+        //  $cancelEventForm->handleRequest($request);
 
 
         $cancelEventFormView = $cancelEventForm->createView();
 
 
-
-        return $this->render('event/cancel.html.twig', compact('cancelEventFormView','event'));
+        return $this->render('event/cancel.html.twig', compact('cancelEventFormView', 'event'));
     }
+}

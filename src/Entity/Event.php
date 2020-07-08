@@ -6,6 +6,7 @@ use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=EventRepository::class)
@@ -20,31 +21,37 @@ class Event
     private $id;
 
     /**
+     * @Assert\NotBlank(message="Entrer un titre s'il vous plaît!")
      * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
+     * @Assert\GreaterThan("today")
      * @ORM\Column(type="datetime")
      */
     private $startDateTime;
 
     /**
+     * @Assert\NotBlank(message="Entrer une durée s'il vous plaît!")
      * @ORM\Column(type="integer")
      */
     private $duration;
 
     /**
+     * @Assert\GreaterThan("today")
      * @ORM\Column(type="date")
      */
     private $inscriptionLimit;
 
     /**
+     * @Assert\NotBlank(message="Entrer le nombre de participants maximum s'il vous plaît!")
      * @ORM\Column(type="integer")
      */
     private $maxParticipant;
 
     /**
+     * @Assert\NotBlank(message="Entrer un description s'il vous plaît!")
      * @ORM\Column(type="text")
      */
     private $eventInfo;
