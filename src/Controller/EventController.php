@@ -55,7 +55,7 @@ class EventController extends AbstractController
             $em->persist($event);
             $em->flush();
 
-            $this->addFlash("success", "Sortie enregistréé");
+            $this->addFlash("success", "Sortie enregistrée");
             return $this->redirectToRoute("event_show", ["id" => $event->getId()]);
 
         }
@@ -128,7 +128,7 @@ class EventController extends AbstractController
         if ($cancelEventForm->isSubmitted() && $cancelEventForm->isValid()){
 
             $stateRepo= $this->getDoctrine()->getRepository(State::class);
-            $state = $stateRepo->findOneBy(array('name'=>'annulée'));
+            $state = $stateRepo->findOneBy(array('name'=>'Annulée'));
 
             $event->setState($state);// doit etre plus complexe que ca
 
