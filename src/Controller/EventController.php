@@ -64,14 +64,27 @@ class EventController extends AbstractController
     /**
      * @Route("/sortie/cancel/{id}", name="event_cancel", methods={"GET", "POST"})
      */
-    public function cancel($id, EventRepository $repo, Request $request)
+    public function cancel($id, EventRepository $repo, Request $request, EntityManagerInterface $em, StateRepository $stateRepo)
     {
+        //recup les infos de l event pour pouvoir les afficher dans le twig
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
 
-        $cancelEventForm = $this->createForm(CancelEventType::class);
-        //  $cancelEventForm->handleRequest($request);
+        $cancelEventForm = $this->createForm(CancelEventType::class, $event);
+        //recupere les infos du form
+        $cancelEventForm->handleRequest($request);
 
+        if ($cancelEventForm->isSubmitted() && $cancelEventForm->isValid()){
+
+            $stateRepo= $this->getDoctrine()->getRepository(State::class);
+            $state = $stateRepo->findOneBy(array('name'=>'annulée'));
+
+            $event->setState($state);// doit etre plus complexe que ca
+
+            $em->persist($event);
+            $em->flush();
+            return  $this->redirectToRoute('home');
+        }
 
         $cancelEventFormView = $cancelEventForm->createView();
 
