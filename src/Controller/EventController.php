@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Event\EventChangeState;
 use App\Form\CancelEventType;
 use App\Entity\State;
 use App\Form\EventType;
@@ -70,20 +71,30 @@ class EventController extends AbstractController
      *     requirements={"id"="\d+"}
      *     )
      */
-    public function signUp($id, EventRepository $eventRepository, EntityManagerInterface $em, UserRepository $userRepository)
+    public function signUp($id, EventRepository $eventRepository, EntityManagerInterface $em, UserRepository $userRepository, StateRepository $stateRepo, EventChangeState $ecs)
     {
         $user = $userRepository->findOneBy(['username' => $this->security->getUser()->getUsername()]) ;
         $event = $eventRepository->find($id);
+        //double check that event is open
+        if($event->getState()->getName() == 'Ouverte'){
+            $event->addParticipant($user);
 
-        $event->addParticipant($user);
-        // TODO get functin to check if the number signed up is the same as the max
+            //check if it is full and change status if needed
+             if($ecs->isFull($event)){
+                 $state = $stateRepo->findOneBy(['name' => 'Clôturée']);
+                 $event->setState($state);
+            }
 
-        $em->persist($event);
-        $em->flush();
+            $em->persist($event);
+            $em->flush();
 
-        $this->addFlash('success', 'Vous vous êtes inscrit à la sortie : ' . $event->getName());
+            $this->addFlash('success', 'Vous vous êtes inscrit à la sortie : ' . $event->getName());
+            return  $this->redirectToRoute('home');
+        }else{
+            $this->addFlash('danger', 'Vous ne vous êtes pas inscrit à la sortie : ' . $event->getName());
+            return  $this->redirectToRoute('home');
+        }
 
-        return  $this->redirectToRoute('home');
     }
 
     /**
