@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use App\Event\EventChangeState;
 
 class EventController extends AbstractController
 {
@@ -81,4 +82,6 @@ class EventController extends AbstractController
 
         return $this->render('event/cancel.html.twig', compact('cancelEventFormView', 'event'));
     }
+
+
 }
