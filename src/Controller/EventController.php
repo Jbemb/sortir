@@ -9,6 +9,7 @@ use App\Form\EventType;
 use App\Repository\EventRepository;
 use App\Repository\StateRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,5 +80,31 @@ class EventController extends AbstractController
 
 
         return $this->render('event/cancel.html.twig', compact('cancelEventFormView', 'event'));
+    }
+
+    /**
+     * @Route("/sortie/sedesister/{id}", name="event_withdraw")
+     */
+    public function withdraw($id, EventRepository $repo, UserRepository $userRepo, EntityManager $em, StateRepository $stateRepo)
+    {
+        //get event
+        $repo = $this->getDoctrine()->getRepository(Event::class);
+        $event = $repo->find($id);
+
+        //get user
+        $user = $userRepo->findOneBy(['username' => $this->security->getUser()->getUsername()]);
+
+        //update event participants
+        $event->removeParticipant($user);
+        //update state
+        $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
+        $event->setState($state);
+
+        //update database
+        $em -> persist($event);
+        $em -> flush($event);
+
+        $this->addFlash("success", "Vous vous êtes désinscrit(e)");
+        return $this->render('main/index.html.twig');
     }
 }
