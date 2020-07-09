@@ -83,6 +83,35 @@ class AppFixtures extends Fixture
         $placeRepo = $manager->getRepository(Place::class);
         $places = $placeRepo->findAll();
 
+
+        /*
+         * UsernamesUs
+         */
+
+        $usernameUs= ['fred', 'leslie', 'janet', 'andrea'];
+
+        foreach ($usernameUs as $username){
+            $user = new User();
+
+            $user->setUsername($username);
+            $user->setFirstName($username);
+            $user->setLastName($username);
+            $user->setTelephone($faker->phoneNumber);
+            $user->setEmail($username . '2020@campus-eni.fr');
+            $user->setCampus($campus[rand(0, count($campus) - 1)]);
+            $user->setIsActive(true);
+            $user->setRoles(['ROLE_USER']);
+
+            $password = $this->encoder->encodePassword($user, 'toto');
+            $user->setPassword($password);
+
+            $manager->persist($user);
+
+        }
+        $manager->flush();
+
+
+
         /*
          * Users
          */
