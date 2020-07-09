@@ -147,7 +147,7 @@ class EventController extends AbstractController
     /**
      * @Route("/sortie/sedesister/{id}", name="event_withdraw")
      */
-    public function withdraw($id, EventRepository $repo, UserRepository $userRepo, EntityManager $em, StateRepository $stateRepo, EventChangeState $ecs)
+    public function withdraw($id, EventRepository $repo, UserRepository $userRepo, EntityManagerInterface $em, StateRepository $stateRepo, EventChangeState $ecs)
     {
         //get event
         $repo = $this->getDoctrine()->getRepository(Event::class);
@@ -157,7 +157,7 @@ class EventController extends AbstractController
         //update event participants
         $event->removeParticipant($user);
         //check if inscription date is not passed and it is not full change state to open
-        if($ecs->isPassedInscription($event) == false || $ecs->isFull($event) == false){
+        if($ecs->isPassedInscription($event) == false && $ecs->isFull($event) == false){
             //update state
             $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
             $event->setState($state);

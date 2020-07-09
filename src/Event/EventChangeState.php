@@ -107,7 +107,7 @@ class EventChangeState
      */
     public function isPassedInscription($event)
     {
-        $ispassed = true;
+        $isPassed = true;
         $inscriptionDate = $event->getInscriptionLimit();
         $now = new \DateTime();
 
