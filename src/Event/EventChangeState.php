@@ -66,8 +66,8 @@ class EventChangeState
         //Passage de clôturée à activité en cours
         $eventsClosed = $eventRepo->findBy(['state'=>$stateClose]);
         foreach ($eventsClosed as $event){
-           $over = $this->isOnGoing($event);
-           if ($over==true){
+           $onGoing = $this->isOnGoing($event);
+           if ($onGoing==true){
                $event->setName('clôturée à activité en cours');
                 $event->setState($stateOnGoing);
                 $em->persist($event);
@@ -135,7 +135,7 @@ class EventChangeState
      */
     public function isOnGoing($event)
     {
-        $isOnGoing = false;
+        $isOnGoing = true;
         // saved in database with seconds
         $start = $event->getStartDateTime();
         $duration = $event->getDuration();
@@ -143,8 +143,8 @@ class EventChangeState
         $end = $start->add($dateInt);
         $now = new \DateTime();
 
-        if ($start < $now || $now < $end) {
-            $isOnGoing = true;
+        if ($start > $now || $now > $end) {
+            $isOnGoing = false;
         }
         return $isOnGoing;
     }
