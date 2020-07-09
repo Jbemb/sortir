@@ -12,6 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class State
 {
+    const CREATED = 'Créée';
+    const OPENED = 'Ouverte';
+    const CLOSED = 'Clôturée';
+    const ONGOING = 'En cours';
+    const CANCELED = 'Annulée';
+    const PASSED = 'Passée';
 
     /**
      * @ORM\Id()
