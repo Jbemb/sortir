@@ -31,6 +31,7 @@ class EventChangeState
         $stateOpen = $stateRepo->findOneBy(['name' => 'Ouverte']);
         $stateClose = $stateRepo->findOneBy(['name' => 'Clôturée']);
         $stateOnGoing = $stateRepo->findOneBy(['name'=>'Activité en cours']);
+        $stateOver = $stateRepo->findOneBy(['name'=>'Passée']);
 
 
         //Passage de ouverts à clôturé
@@ -63,10 +64,11 @@ class EventChangeState
         $em->flush();
 
         //Passage de clôturée à activité en cours
-        $eventsClose2 = $eventRepo->findBy(['state'=>$stateClose]);
-        foreach ($eventsClose2 as $event){
-           $onGoing = $this->isOnGoing($event);
-           if ($onGoing==true){
+        $eventsClosed = $eventRepo->findBy(['state'=>$stateClose]);
+        foreach ($eventsClosed as $event){
+           $over = $this->isOnGoing($event);
+           if ($over==true){
+               $event->setName('clôturée à activité en cours');
                 $event->setState($stateOnGoing);
                 $em->persist($event);
             }
@@ -74,8 +76,18 @@ class EventChangeState
         $em->flush();
 
         //Passage de activité en cours à Activité terminée
+        $eventsOnGoing = $eventRepo->findBy(['state'=>$stateOnGoing]);
+        foreach ($eventsOnGoing as $event){
+            $isFinished = $this->isFinished($event);
+            if ($isFinished==true){
+                $event->setName('activité en cours à Activité terminée');
+                $event->setState($stateOver);
+                $em->persist($event);
+            }
+        }
+        $em->flush();
 
-        return $eventsClose2;
+        return $eventsOnGoing;
     }
 
 
@@ -123,25 +135,20 @@ class EventChangeState
      */
     public function isOnGoing($event)
     {
-        $isOnGoing = true;
+        $isOnGoing = false;
         // saved in database with seconds
         $start = $event->getStartDateTime();
-        dump($start);
-
         $duration = $event->getDuration();
         $dateInt = \DateInterval::createFromDateString($duration. 'minutes');
-        //$dateInterval = new \DateInterval('PT'.$duration.'I');
-        dump($duration);
-        dump($dateInt);
         $end = $start->add($dateInt);
-        dump($end);
         $now = new \DateTime();
 
-        if ($now < $start || $now > $end) {
-            $isOnGoing = false;
+        if ($start < $now || $now < $end) {
+            $isOnGoing = true;
         }
         return $isOnGoing;
     }
+
     /*
     * takes an $event
     * returns a boolean
@@ -158,6 +165,26 @@ class EventChangeState
         }
 
         return $hasStarted;
+    }
+
+    /**
+     * @param $event
+     * @return bool
+     * return true if the event is finished
+     */
+    public function isFinished($event)
+    {
+        $isFinished = true;
+        $now = new \DateTime();
+        $start = $event->getStartDateTime();
+        $duration = $event->getDuration();
+        $dateInt = \DateInterval::createFromDateString($duration. 'minutes');
+        $endTime = $start->add($dateInt);
+
+        if ($endTime>$now){
+            $isFinished = false;
+        }
+        return $isFinished;
     }
 
 }
