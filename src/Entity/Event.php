@@ -89,10 +89,11 @@ class Event
      * @ORM\Column(type="text", nullable=true)
      */
     private $reasonDelete;
+
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
-    private $isArchived;
+    private $isArchived = false;
 
     public function __construct()
     {
