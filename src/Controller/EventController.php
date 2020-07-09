@@ -162,6 +162,7 @@ class EventController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
         //get user
+        // TODO check if we can use $this->security->getUser() instead
         $user = $userRepo->findOneBy(['username' => $this->security->getUser()->getUsername()]);
         //update event participants
         $event->removeParticipant($user);

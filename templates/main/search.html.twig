@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Accueil{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/search.css') }}">
+{% endblock %}
+
+{% block main %}
+    <div id="search">
+        {{ form_start(searchForm) }}
+        {{ form_row(searchForm.campus) }}
+        {{ form_end(searchForm) }}
+    </div>
+    <div id="events">
+        <h4>{{ events | length }} sorties trouvées</h4>
+        <div class="row">
+            <div class="col-2">Nom de la sortie</div>
+            <div class="col-2">Date de la sortie</div>
+            <div class="col-1">Clôture</div>
+            <div class="col-1">Inscrits / places</div>
+            <div class="col-1">Etat</div>
+            <div class="col-1">Inscrit</div>
+            <div class="col-2">Organisateur</div>
+            <div class="col-2">Actions</div>
+        </div>
+        {% for event in events %}
+            <div class="row {{ cycle(['odd', 'even'], loop.index0) }}">
+                <div class="col-2">{{ event.name }}</div>
+                <div class="col-2">{{ event.startDateTime | date('d/m/y H:i') }}</div>
+                <div class="col-1">{{ event.inscriptionLimit | date('d/m/y') }}</div>
+                <div class="col-1">{{ event.participants | length }}/{{ event.maxParticipant }}</div>
+                <div class="col-1">{{ event.state.name }}</div>
+                <div class="col-1">
+                    {% if app.user in event.participants %}
+                        <img src="{{ asset('img/green-check-mark.png') }}" alt="inscrits">
+                    {% endif %}
+                </div>
+                <div class="col-2">{{ event.organiser.username }}</div>
+                <div class="col-2">
+                    {{ event.id }}
+                    {% if event.state.name == constant('OPENED', event.state)
+                        or event.state.name == constant('CLOSED', event.state)
+                        or event.state.name == constant('CANCELED', event.state)
+                        or event.state.name == constant('ONGOING', event.state)
+                        or event.state.name == constant('PASSED', event.state)
+                    %}
+                        Afficher
+                    {% endif %}
+
+                    {% if app.user == event.organiser and event.state.name == constant('CREATED', event.state) %}
+                        Modifier
+                    {% endif %}
+
+                    {% if app.user == event.organiser and event.state.name == constant('CREATED', event.state) %}
+                        Publier
+                    {% endif %}
+
+                    {% if app.user == event.organiser and (event.state.name == constant('CLOSED', event.state) or event.state.name == constant('OPENED', event.state)) %}
+                        Annuler
+                    {% endif %}
+
+                    {% if app.user not in event.participants and event.state.name == constant('OPENED', event.state) %}
+                        S'inscrire
+                    {% endif %}
+
+                    {% if app.user in event.participants and (event.state.name == constant('OPENED', event.state) or event.state.name == constant('CLOSED', event.state)) %}
+                        Se désister
+                    {% endif %}
+
+
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
