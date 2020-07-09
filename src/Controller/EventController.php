@@ -115,34 +115,40 @@ class EventController extends AbstractController
     /**
      * @Route("/sortie/cancel/{id}", name="event_cancel", methods={"GET", "POST"})
      */
-    public function cancel($id, EventRepository $repo, Request $request, EntityManagerInterface $em, StateRepository $stateRepo)
+    public function cancel($id, EventRepository $repo, Request $request, EntityManagerInterface $em, StateRepository $stateRepo, EventChangeState $ecs)
     {
 
         //recup les infos de l event pour pouvoir les afficher dans le twig
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
 
-        $cancelEventForm = $this->createForm(CancelEventType::class, $event);
-        //recupere les infos du form
-        $cancelEventForm->handleRequest($request);
-
-        if ($cancelEventForm->isSubmitted() && $cancelEventForm->isValid()){
-
-            $stateRepo= $this->getDoctrine()->getRepository(State::class);
-            $state = $stateRepo->findOneBy(array('name'=>'Annulée'));
-
-            $event->setState($state);
-
-            $em->persist($event);
-            $em->flush();
+        //check if event has started or not to no have access if true
+        if($ecs->hasStarted($event)){
+            $this->addFlash('success', 'La sortie ' . $event->getName(). ' ne peut etre annulée, elle est actuellement en cours ou déjà passée!' );
             return  $this->redirectToRoute('home');
+        }else{
+            $cancelEventForm = $this->createForm(CancelEventType::class, $event);
+            //recupere les infos du form
+            $cancelEventForm->handleRequest($request);
+
+            if ($cancelEventForm->isSubmitted() && $cancelEventForm->isValid()){
+
+                $stateRepo= $this->getDoctrine()->getRepository(State::class);
+                $state = $stateRepo->findOneBy(array('name'=>'Annulée'));
+
+                $event->setState($state);
+
+                $em->persist($event);
+                $em->flush();
+                return  $this->redirectToRoute('home');
+            }
+
+            $cancelEventFormView = $cancelEventForm->createView();
+            return $this->render('event/cancel.html.twig', compact('cancelEventFormView', 'event'));
         }
 
-        $cancelEventFormView = $cancelEventForm->createView();
-
-
-        return $this->render('event/cancel.html.twig', compact('cancelEventFormView', 'event'));
     }
+
 
     /**
      * @Route("/sortie/sedesister/{id}", name="event_withdraw")
