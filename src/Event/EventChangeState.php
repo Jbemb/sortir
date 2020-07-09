@@ -67,6 +67,7 @@ class EventChangeState
         foreach ($eventsClose2 as $event){
            $onGoing = $this->isOnGoing($event);
            if ($onGoing==true){
+               $event->setName('clôturée à activité en cours');
                 $event->setState($stateOnGoing);
                 $em->persist($event);
             }
@@ -123,22 +124,16 @@ class EventChangeState
      */
     public function isOnGoing($event)
     {
-        $isOnGoing = true;
+        $isOnGoing = false;
         // saved in database with seconds
         $start = $event->getStartDateTime();
-        dump($start);
-
         $duration = $event->getDuration();
         $dateInt = \DateInterval::createFromDateString($duration. 'minutes');
-        //$dateInterval = new \DateInterval('PT'.$duration.'I');
-        dump($duration);
-        dump($dateInt);
         $end = $start->add($dateInt);
-        dump($end);
         $now = new \DateTime();
 
-        if ($now < $start || $now > $end) {
-            $isOnGoing = false;
+        if ($start < $now || $now < $end) {
+            $isOnGoing = true;
         }
         return $isOnGoing;
     }
