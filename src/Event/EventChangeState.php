@@ -65,14 +65,13 @@ class EventChangeState
         //Passage de clôturée à activité en cours
         $eventsClose2 = $eventRepo->findBy(['state'=>$stateClose]);
         foreach ($eventsClose2 as $event){
-            $onGoing = $this->isOnGoing($event);
-            if ($onGoing==true){
+           $onGoing = $this->isOnGoing($event);
+           if ($onGoing==true){
                 $event->setState($stateOnGoing);
                 $em->persist($event);
             }
         }
         $em->flush();
-        dump($eventsClose2);
 
         //Passage de activité en cours à Activité terminée
 
@@ -120,29 +119,28 @@ class EventChangeState
     /*
      * takes an $event
      * returns a boolean
-     * true if the event is en cours
+     * true if the event is on going
      */
     public function isOnGoing($event)
     {
-        $isEnCours = true;
+        $isOnGoing = true;
         // saved in database with seconds
         $start = $event->getStartDateTime();
         dump($start);
-        // duration is stored in minutes, so I turn it to seconds
-        //$duration =$event->getDuration() * 60;
+
         $duration = $event->getDuration();
-        $end = date_add($start, date_interval_create_from_date_string($duration.'minutes'));
+        $dateInt = \DateInterval::createFromDateString($duration. 'minutes');
         //$dateInterval = new \DateInterval('PT'.$duration.'I');
         dump($duration);
-        //$end = $start->add($dateInterval);
+        dump($dateInt);
+        $end = $start->add($dateInt);
         dump($end);
-        //$end = $start + $duration;
         $now = new \DateTime();
 
         if ($now < $start || $now > $end) {
-            $isEnCours = false;
+            $isOnGoing = false;
         }
-        return $isEnCours;
+        return $isOnGoing;
     }
 
 }
