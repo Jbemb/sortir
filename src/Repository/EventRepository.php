@@ -2,8 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Campus;
 use App\Entity\Event;
+use App\Entity\Search;
 use App\Entity\State;
+use \DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,10 +23,34 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
-    public function search()
+    public function search(Search $search)
     {
         $qb = $this->createQueryBuilder('e');
 
+        $qb->andWhere('e.campus = :campus')
+            ->setParameter('campus', $search->getCampus());
+
+        if ($search->getKeywords() != '')
+        {
+            $qb->andWhere('e.name LIKE :keywords')
+                ->setParameter('keywords', '%' . $search->getKeywords() . '%');
+        }
+
+        if (!is_null($search->getStartDate()))
+        {
+            $qb->andWhere('e.startDateTime > :startDate')
+                ->orWhere('e.startDateTime = :startDate')
+                ->setParameter('startDate', $search->getStartDate());
+        }
+
+        if (!is_null($search->getEndDate()))
+        {
+            $qb->andWhere('e.startDateTime < :endDate')
+                ->orWhere('e.startDateTime = :endDate')
+                ->setParameter('endDate', $search->getEndDate());
+        }
+
+        return $qb->getQuery()->getResult();
 
     }
 

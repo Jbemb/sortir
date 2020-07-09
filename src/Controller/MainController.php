@@ -25,7 +25,7 @@ class MainController extends AbstractController
         $search->setSignedUp(true);
         $search->setNotSignedUp(true);
         $search->setCampus($this->getUser()->getCampus());
-        
+
 
         // TODO Get old search from session to always show previous search if user come back from elsewhere
 
@@ -40,7 +40,7 @@ class MainController extends AbstractController
         if ($searchForm->isSubmitted())
         {
         }
-            $events = $eventRepository->findAll();
+            $events = $eventRepository->search($search);
 
         return $this->render('main/search.html.twig', [
             'searchForm'    =>  $searchForm->createView(),
