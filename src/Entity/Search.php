@@ -20,13 +20,13 @@ class Search
 
     private $endDate;
 
-    private $organiser;
+    private $isOrganiser;
 
-    private $signedUp;
+    private $isSignedUp;
 
-    private $notSignedUp;
+    private $isNotSignedUp;
 
-    private $passedEvent;
+    private $isPassedEvent;
 
 
     public function getCampus(): ?Campus
@@ -77,50 +77,50 @@ class Search
         return $this;
     }
 
-    public function getOrganiser(): ?bool
+    public function isOrganiser(): ?bool
     {
-        return $this->organiser;
+        return $this->isOrganiser;
     }
 
-    public function setOrganiser(bool $organiser): self
+    public function setIsOrganiser(bool $isOrganiser): self
     {
-        $this->organiser = $organiser;
+        $this->isOrganiser = $isOrganiser;
 
         return $this;
     }
 
-    public function getSignedUp(): ?bool
+    public function isSignedUp(): ?bool
     {
-        return $this->signedUp;
+        return $this->isSignedUp;
     }
 
-    public function setSignedUp(bool $signedUp): self
+    public function setIsSignedUp(bool $isSignedUp): self
     {
-        $this->signedUp = $signedUp;
+        $this->isSignedUp = $isSignedUp;
 
         return $this;
     }
 
-    public function getNotSignedUp(): ?bool
+    public function isNotSignedUp(): ?bool
     {
-        return $this->notSignedUp;
+        return $this->isNotSignedUp;
     }
 
-    public function setNotSignedUp(bool $notSignedUp): self
+    public function setIsNotSignedUp(bool $isNotSignedUp): self
     {
-        $this->notSignedUp = $notSignedUp;
+        $this->isNotSignedUp = $isNotSignedUp;
 
         return $this;
     }
 
-    public function getPassedEvent(): ?bool
+    public function isPassedEvent(): ?bool
     {
-        return $this->passedEvent;
+        return $this->isPassedEvent;
     }
 
-    public function setPassedEvent(bool $passedEvent): self
+    public function setIsPassedEvent(bool $isPassedEvent): self
     {
-        $this->passedEvent = $passedEvent;
+        $this->isPassedEvent = $isPassedEvent;
 
         return $this;
     }

@@ -35,19 +35,19 @@ class SearchType extends AbstractType
                 'label'     => 'et',
                 'required'  => false
             ])
-            ->add('organiser', CheckboxType::class, [
+            ->add('isOrganiser', CheckboxType::class, [
                 'label'     => 'Sorties dont je suis l\'organisatrice/teur',
                 'required'  => false
             ])
-            ->add('signedUp', CheckboxType::class, [
+            ->add('isSignedUp', CheckboxType::class, [
                 'label'     => 'Sorties auxquelles je suis inscrit/e',
                 'required'  => false
             ])
-            ->add('notSignedUp', CheckboxType::class, [
+            ->add('isNotSignedUp', CheckboxType::class, [
                 'label'     => 'Sorties auxquelles je ne suis pas inscrit/e',
                 'required'  => false
             ])
-            ->add('passedEvent', CheckboxType::class, [
+            ->add('isPassedEvent', CheckboxType::class, [
                 'label'     => 'Sorties passées',
                 'required'  => false
             ])

@@ -21,9 +21,9 @@ class MainController extends AbstractController
     {
         $search = new Search();
         // TODO add default options maybe in SearchType::class
-        $search->setOrganiser(true);
-        $search->setSignedUp(true);
-        $search->setNotSignedUp(true);
+        $search->setIsOrganiser(true);
+        $search->setIsSignedUp(true);
+        $search->setIsNotSignedUp(true);
         $search->setCampus($this->getUser()->getCampus());
 
 
@@ -40,7 +40,7 @@ class MainController extends AbstractController
         if ($searchForm->isSubmitted())
         {
         }
-            $events = $eventRepository->search($search);
+            $events = $eventRepository->search($search, $security->getUser());
 
         return $this->render('main/search.html.twig', [
             'searchForm'    =>  $searchForm->createView(),
