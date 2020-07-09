@@ -89,6 +89,10 @@ class Event
      * @ORM\Column(type="text", nullable=true)
      */
     private $reasonDelete;
+    /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $isArchived;
 
     public function __construct()
     {
@@ -218,6 +222,22 @@ class Event
         $this->state = $state;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsArchived()
+    {
+        return $this->isArchived;
+    }
+
+    /**
+     * @param mixed $isArchived
+     */
+    public function setIsArchived($isArchived): void
+    {
+        $this->isArchived = $isArchived;
     }
 
     /**
