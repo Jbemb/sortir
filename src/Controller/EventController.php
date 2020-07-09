@@ -117,6 +117,7 @@ class EventController extends AbstractController
      */
     public function cancel($id, EventRepository $repo, Request $request, EntityManagerInterface $em, StateRepository $stateRepo)
     {
+
         //recup les infos de l event pour pouvoir les afficher dans le twig
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
@@ -130,7 +131,7 @@ class EventController extends AbstractController
             $stateRepo= $this->getDoctrine()->getRepository(State::class);
             $state = $stateRepo->findOneBy(array('name'=>'Annulée'));
 
-            $event->setState($state);// doit etre plus complexe que ca
+            $event->setState($state);
 
             $em->persist($event);
             $em->flush();
@@ -158,6 +159,7 @@ class EventController extends AbstractController
         //update event participants
         $event->removeParticipant($user);
 
+        //check if inscription date is passed
         //ToDo function to check if max participants is greater than number signed-up
 
         //update state

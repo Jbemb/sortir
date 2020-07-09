@@ -137,5 +137,22 @@ class EventChangeState
         }
         return $isOnGoing;
     }
+    /*
+    * takes an $event
+    * returns a boolean
+    * true if the event has started
+    */
+    public function hasStarted($event)
+    {
+        $hasStarted = true;
+        $startTime = $event->getStartDateTime();
+        $now = new \DateTime();
+
+        if ($startTime < $now) {
+            $hasStarted = false;
+        }
+
+        return $hasStarted;
+    }
 
 }
