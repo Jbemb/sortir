@@ -15,10 +15,8 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(Request $request, EventChangeState $eventChangeState)
+    public function index(Request $request)
     {
-        $events = $eventChangeState->changeState();
-
 
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
