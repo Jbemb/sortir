@@ -160,7 +160,7 @@ class EventChangeState
         $startTime = $event->getStartDateTime();
         $now = new \DateTime();
 
-        if ($startTime < $now) {
+        if ($startTime > $now) {
             $hasStarted = false;
         }
 
