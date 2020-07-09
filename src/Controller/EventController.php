@@ -158,6 +158,7 @@ class EventController extends AbstractController
         //update event participants
         $event->removeParticipant($user);
 
+        //check if inscription date is passed
         //ToDo function to check if max participants is greater than number signed-up
 
         //update state
