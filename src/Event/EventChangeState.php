@@ -54,7 +54,7 @@ class EventChangeState
         //nbInscrits<nbMaxInscrits et date <= dateClôture
         foreach ($eventsClose as $event){
             $notFull = $this->isFull($event);
-            if (new DateTime() <= $event->getInscriptionLimit() ||$notFull==false){
+            if (new DateTime() <= $event->getInscriptionLimit() && $notFull==false){
                 $event->setName('Clôturé à ouvert');
                 $event->setState($stateOpen);
                 $em->persist($event);
@@ -65,11 +65,11 @@ class EventChangeState
         //Passage de clôturée à activité en cours
         $eventsClose2 = $eventRepo->findBy(['state'=>$stateClose]);
         foreach ($eventsClose2 as $event){
-//            $enCours = $this->isEnCours($event);
-//            if ($enCours==true){
-//                $event->setState($stateOnGoing);
-//                $em->persist($event);
-//            }
+            $onGoing = $this->isOnGoing($event);
+            if ($onGoing==true){
+                $event->setState($stateOnGoing);
+                $em->persist($event);
+            }
         }
         $em->flush();
         dump($eventsClose2);
@@ -122,7 +122,7 @@ class EventChangeState
      * returns a boolean
      * true if the event is en cours
      */
-    public function isEnCours($event)
+    public function isOnGoing($event)
     {
         $isEnCours = true;
         // saved in database with seconds
@@ -131,10 +131,10 @@ class EventChangeState
         // duration is stored in minutes, so I turn it to seconds
         //$duration =$event->getDuration() * 60;
         $duration = $event->getDuration();
-        $dateInterval = new \DateInterval('PT'.$duration.'I');
+        $end = date_add($start, date_interval_create_from_date_string($duration.'minutes'));
+        //$dateInterval = new \DateInterval('PT'.$duration.'I');
         dump($duration);
-        dump($dateInterval);
-        $end = $start->add($dateInterval);
+        //$end = $start->add($dateInterval);
         dump($end);
         //$end = $start + $duration;
         $now = new \DateTime();
