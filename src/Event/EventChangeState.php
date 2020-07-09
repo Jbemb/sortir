@@ -54,7 +54,7 @@ class EventChangeState
         //nbInscrits<nbMaxInscrits et date <= dateClôture
         foreach ($eventsClose as $event){
             $notFull = $this->isFull($event);
-            if (new DateTime() <= $event->getInscriptionLimit() ||$notFull==false){
+            if (new DateTime() <= $event->getInscriptionLimit() && $notFull==false){
                 $event->setName('Clôturé à ouvert');
                 $event->setState($stateOpen);
                 $em->persist($event);
@@ -65,14 +65,13 @@ class EventChangeState
         //Passage de clôturée à activité en cours
         $eventsClose2 = $eventRepo->findBy(['state'=>$stateClose]);
         foreach ($eventsClose2 as $event){
-//            $enCours = $this->isEnCours($event);
-//            if ($enCours==true){
-//                $event->setState($stateOnGoing);
-//                $em->persist($event);
-//            }
+           $onGoing = $this->isOnGoing($event);
+           if ($onGoing==true){
+                $event->setState($stateOnGoing);
+                $em->persist($event);
+            }
         }
         $em->flush();
-        dump($eventsClose2);
 
         //Passage de activité en cours à Activité terminée
 
@@ -120,29 +119,28 @@ class EventChangeState
     /*
      * takes an $event
      * returns a boolean
-     * true if the event is en cours
+     * true if the event is on going
      */
-    public function isEnCours($event)
+    public function isOnGoing($event)
     {
-        $isEnCours = true;
+        $isOnGoing = true;
         // saved in database with seconds
         $start = $event->getStartDateTime();
         dump($start);
-        // duration is stored in minutes, so I turn it to seconds
-        //$duration =$event->getDuration() * 60;
+
         $duration = $event->getDuration();
-        $dateInterval = new \DateInterval('PT'.$duration.'I');
+        $dateInt = \DateInterval::createFromDateString($duration. 'minutes');
+        //$dateInterval = new \DateInterval('PT'.$duration.'I');
         dump($duration);
-        dump($dateInterval);
-        $end = $start->add($dateInterval);
+        dump($dateInt);
+        $end = $start->add($dateInt);
         dump($end);
-        //$end = $start + $duration;
         $now = new \DateTime();
 
         if ($now < $start || $now > $end) {
-            $isEnCours = false;
+            $isOnGoing = false;
         }
-        return $isEnCours;
+        return $isOnGoing;
     }
 
 }
