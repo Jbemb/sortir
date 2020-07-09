@@ -30,8 +30,8 @@ class EventChangeState
         $stateRepo = $this->doctrine->getRepository(State::class);
         $stateOpen = $stateRepo->findOneBy(['name' => 'Ouverte']);
         $stateClose = $stateRepo->findOneBy(['name' => 'Clôturée']);
-        $stateOnGoing = $stateRepo->findOneBy(['name'=>'Activité en cours']);
-        $stateOver = $stateRepo->findOneBy(['name'=>'Passée']);
+        $stateOnGoing = $stateRepo->findOneBy(['name' => 'Activité en cours']);
+        $stateOver = $stateRepo->findOneBy(['name' => 'Passée']);
 
 
         //Passage de ouverts à clôturé
@@ -40,9 +40,8 @@ class EventChangeState
 
         //nbInscrits=nbMaxInscrits ou date > dateClôture
         foreach ($eventsOpen as $event) {
-        $Full = $this->isFull($event);
-            if (new DateTime() > $event->getInscriptionLimit() || $Full==true) {
-                $event->setName('ouvert à clôturé');
+            $Full = $this->isFull($event);
+            if (new DateTime() > $event->getInscriptionLimit() || $Full == true) {
                 $event->setState($stateClose);
                 $em->persist($event);
             }
@@ -51,12 +50,11 @@ class EventChangeState
 
 
         //Passage de clôturé à ouverts
-        $eventsClose = $eventRepo->findBy(['state'=>$stateClose]);
+        $eventsClose = $eventRepo->findBy(['state' => $stateClose]);
         //nbInscrits<nbMaxInscrits et date <= dateClôture
-        foreach ($eventsClose as $event){
+        foreach ($eventsClose as $event) {
             $notFull = $this->isFull($event);
-            if (new DateTime() <= $event->getInscriptionLimit() && $notFull==false){
-                $event->setName('Clôturé à ouvert');
+            if (new DateTime() <= $event->getInscriptionLimit() && $notFull == false) {
                 $event->setState($stateOpen);
                 $em->persist($event);
             }
@@ -64,11 +62,10 @@ class EventChangeState
         $em->flush();
 
         //Passage de clôturée à activité en cours
-        $eventsClosed = $eventRepo->findBy(['state'=>$stateClose]);
-        foreach ($eventsClosed as $event){
-           $onGoing = $this->isOnGoing($event);
-           if ($onGoing==true){
-               $event->setName('clôturée à activité en cours');
+        $eventsClosed = $eventRepo->findBy(['state' => $stateClose]);
+        foreach ($eventsClosed as $event) {
+            $onGoing = $this->isOnGoing($event);
+            if ($onGoing == true) {
                 $event->setState($stateOnGoing);
                 $em->persist($event);
             }
@@ -76,11 +73,10 @@ class EventChangeState
         $em->flush();
 
         //Passage de activité en cours à Activité terminée
-        $eventsOnGoing = $eventRepo->findBy(['state'=>$stateOnGoing]);
-        foreach ($eventsOnGoing as $event){
+        $eventsOnGoing = $eventRepo->findBy(['state' => $stateOnGoing]);
+        foreach ($eventsOnGoing as $event) {
             $isFinished = $this->isFinished($event);
-            if ($isFinished==true){
-                $event->setName('activité en cours à Activité terminée');
+            if ($isFinished == true) {
                 $event->setState($stateOver);
                 $em->persist($event);
             }
@@ -90,12 +86,9 @@ class EventChangeState
         return $eventsOnGoing;
     }
 
-
-
-
-    /*
-     * takes an $event
-     * returns a boolean
+    /**
+     * @param $event
+     * @return bool
      * true if the number of participants is equal to the inscription limit
      */
     public function isFull($event)
@@ -111,9 +104,9 @@ class EventChangeState
         return $isFull;
     }
 
-    /*
-     * takes an $event
-     * returns a boolean
+    /**
+     * @param $event
+     * @return bool
      * true if the current date is past the date of inscription
      */
     public function isPassedInscription($event)
@@ -128,9 +121,10 @@ class EventChangeState
 
         return $isPassed;
     }
-    /*
-     * takes an $event
-     * returns a boolean
+
+    /**
+     * @param $event
+     * @return bool
      * true if the event is on going
      */
     public function isOnGoing($event)
@@ -139,7 +133,7 @@ class EventChangeState
         // saved in database with seconds
         $start = $event->getStartDateTime();
         $duration = $event->getDuration();
-        $dateInt = \DateInterval::createFromDateString($duration. 'minutes');
+        $dateInt = \DateInterval::createFromDateString($duration . 'minutes');
         $end = $start->add($dateInt);
         $now = new \DateTime();
 
@@ -149,11 +143,11 @@ class EventChangeState
         return $isOnGoing;
     }
 
-    /*
-    * takes an $event
-    * returns a boolean
-    * true if the event has started
-    */
+    /**
+     * @param $event
+     * @return bool
+     * true if the event has started
+     */
     public function hasStarted($event)
     {
         $hasStarted = true;
@@ -178,13 +172,50 @@ class EventChangeState
         $now = new \DateTime();
         $start = $event->getStartDateTime();
         $duration = $event->getDuration();
-        $dateInt = \DateInterval::createFromDateString($duration. 'minutes');
+        $dateInt = \DateInterval::createFromDateString($duration . 'minutes');
         $endTime = $start->add($dateInt);
 
-        if ($endTime>$now){
+        if ($endTime > $now) {
             $isFinished = false;
         }
         return $isFinished;
+    }
+
+    /**
+     *
+     *Classifies events as Archived if they are 1 month past the end time
+     */
+    public function archiveEvents()
+    {
+        $em = $this->doctrine->getManager();
+
+        //Récupérer state annulées et passée
+        $stateRepo = $this->doctrine->getRepository(State::class);
+        $stateCancel = $stateRepo->findOneBy(['name' => 'Annulée']);
+        $stateOver = $stateRepo->findOneBy(['name' => 'Passée']);
+
+        //get cancelled and past events
+        $eventRepo = $this->doctrine->getRepository(Event::class);
+        $eventsCancel = $eventRepo->findBy(['state' => $stateCancel]);
+        $eventsOver = $eventRepo->findBy(['state' => $stateOver]);
+        $eventsVerify =array_merge($eventsCancel, $eventsOver);
+
+        foreach ($eventsVerify as $event) {
+            // get end date
+            $start = $event->getStartDateTime();
+            $duration = $event->getDuration();
+            $dateInt = \DateInterval::createFromDateString($duration . 'minutes');
+            $endTime = $start->add($dateInt);
+            // get archive date
+            $archiveDate = $endTime->add(new \DateInterval('P1M'));
+            //compare end time to see if we need to archive
+            $now = new \DateTime();
+            if ($archiveDate > $now) {
+                $event->setIsArchived(true);
+                $em->persist($event);
+            }
+        }
+        $em->flush();
     }
 
 }
