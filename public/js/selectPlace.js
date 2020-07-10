@@ -6,8 +6,8 @@ city.addEventListener('change', addPlaces);
 //prepare request
 let dbRequest = new XMLHttpRequest();
 
-function addPlaces(evt){
-    //recup la valeur choisie dans la liste déroulante
+function addPlaces(evt) {
+   //recup la valeur choisie dans la liste déroulante
    let chosenCity = evt.target.value;
 
    $.post(
@@ -15,10 +15,23 @@ function addPlaces(evt){
        {
           cityId: chosenCity
        },
-       function(data){
-          console.log(data);
+       function (data) {
+           place.innerText="";
+      console.log(data)
+
+          $.each(data, function(key, p){
+
+
+             let option = document.createElement('option');
+              option.text = p.name;
+              option.value = p.id;
+              place.add(option);
+          })
+
+
        }
    );
+}
 
   /* dbRequest.open('POST', url);
    // url? or file on the server with the code? ('GET', "nameoffichier.php?q="+chosenCity, true)
@@ -62,4 +75,4 @@ function addStreet(evt){
    dbRequest.open('GET', '/recupererLieu/' + chosenPlace);
    // url? or file on the server with the code? ('GET', "nameoffichier.php?q="+chosenCity, true)
    dbRequest.send();
-}
+}*/
