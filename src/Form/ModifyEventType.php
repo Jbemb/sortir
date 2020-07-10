@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Campus;
 use App\Entity\Event;
+use App\Repository\PlaceRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -49,11 +50,13 @@ class ModifyEventType extends AbstractType
                 'choice_label'=>'name',
                 'disabled'=>true,
             ])
-//            ->add('place',  ChoiceType::class, [
-//                'label' => 'Lieu',
-//                // 'class' => Place::class,
-//                //  'choice_label' => 'name'
-//            ])
+            ->add('place',  null, [
+                'label' => 'Lieu',
+                'choice_label' => 'name',
+                'query_builder'=> function(PlaceRepository $repo){
+                    return $repo->createQueryBuilder('p')->addOrderBy('p.name', 'ASC');
+                }
+            ])
             ->add('save', SubmitType::class, ['label' => 'Enregistrer'])
             ->add('saveAndAdd', SubmitType::class, ['label' => 'Publier la sortie'])
             ->add('delete', SubmitType::class, ['label'=>'Supprimer la sortie'])
