@@ -23,5 +23,8 @@
 
 {% endblock %}
 {% block javascripts %}
+    <script>
+        const url = '{{ url('place_find_by_city') }}';
+    </script>
     <script src="{{ asset('js/selectPlace.js') }}"></script>
 {% endblock %}
