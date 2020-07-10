@@ -26,6 +26,8 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create('fr_FR');
 
+        echo 'Création des fixtures ;)';
+
         /*
          * Campus
          */
@@ -40,11 +42,6 @@ class AppFixtures extends Fixture
 
         $campusRepo = $manager->getRepository(Campus::class);
         $campus = $campusRepo->findAll();
-
-
-        foreach ($campus as $c) {
-            echo $c->getName() . "\n";
-        }
 
         /*
         * Cities
@@ -138,9 +135,6 @@ class AppFixtures extends Fixture
             $user->setIsActive(true);
             $user->setTelephone($faker->phoneNumber);
             $user->setRoles(['ROLE_USER']);
-
-            echo $user->getFirstName() . ' ' . $user->getLastName() . "\n";
-            echo $user->getUsername() . "\n";
 
             $password = $this->encoder->encodePassword($user, 'toto');
             $user->setPassword($password);

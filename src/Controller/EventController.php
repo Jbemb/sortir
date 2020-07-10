@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\City;
 use App\Entity\Event;
 use App\Event\EventChangeState;
 use App\Form\CancelEventType;
 use App\Entity\State;
 use App\Form\EventType;
+use App\Form\ModifyEventType;
 use App\Repository\EventRepository;
 use App\Repository\StateRepository;
 use App\Repository\UserRepository;
@@ -34,6 +36,8 @@ class EventController extends AbstractController
     {
         $user = $userRepo->findOneBy(['username' => $this->security->getUser()->getUsername()]);
         $event = new Event();
+
+
         $event->setInscriptionLimit(new \DateTime());
         $event->setStartDateTime(new \DateTime());
         $event->setOrganiser($user);
@@ -159,6 +163,7 @@ class EventController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
         //get user
+        // TODO check if we can use $this->security->getUser() instead
         $user = $userRepo->findOneBy(['username' => $this->security->getUser()->getUsername()]);
         //update event participants
         $event->removeParticipant($user);
@@ -175,5 +180,42 @@ class EventController extends AbstractController
 
         $this->addFlash("success", "Vous vous êtes désinscrit(e)");
         return  $this->redirectToRoute('home');
+    }
+
+    /**
+     * @Route("/sortie/modify/{id}", name="event_modify", requirements={"id"="\d+"})
+     */
+    public function modify($id, EntityManagerInterface $em, Request $request, StateRepository $stateRepo){
+        $eventRepo = $this->getDoctrine()->getRepository(Event::class);
+        $event = $eventRepo->find($id);
+        $modifyEventForm = $this->createForm(ModifyEventType::class, $event);
+        $modifyEventForm->handleRequest($request);
+
+        if ($modifyEventForm->isSubmitted() && $modifyEventForm->isValid()){
+            $state= new State;
+
+            if ($modifyEventForm->get('delete')->isClicked()){
+                $em->remove($event);
+                $em->flush();
+                $this->addFlash("success", "Sortie supprimée");
+            }else{
+                if ($modifyEventForm->get('saveAndAdd')->isClicked()) {
+                    $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
+
+                }elseif ($modifyEventForm->get('save')->isClicked()){
+                    $state = $stateRepo->findOneBy(['name' => 'Créée']);
+                }
+                $event->setState($state);
+                $em->persist($event);
+                $em->flush();
+
+                $this->addFlash("success", "Sortie modifiée");
+            }
+                return $this->redirectToRoute('home');
+        }
+
+        return $this->render('event/modify.html.twig', [
+            'modifyEventForm' => $modifyEventForm->createView()
+        ]);
     }
 }

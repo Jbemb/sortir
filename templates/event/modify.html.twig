@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {{ form_start(modifyEventForm) }}
+    {{ form_row(modifyEventForm.name) }}
+    {{ form_row(modifyEventForm.startDateTime) }}
+    {{ form_row(modifyEventForm.inscriptionLimit) }}
+    {{ form_row(modifyEventForm.maxParticipant) }}
+    {{ form_row(modifyEventForm.duration) }}
+    {{ form_row(modifyEventForm.eventInfo) }}
+    {{ form_row(modifyEventForm.campus) }}
+{#    {{ form_row(modifyEventForm.place) }}#}
+
+    <div class="button_center">
+        {{ form_row(modifyEventForm.save) }}
+        {{ form_row(modifyEventForm.saveAndAdd) }}
+        {{ form_row(modifyEventForm.delete) }}
+        <div class="form-group">
+            <a href="{{ path('home') }}"><button class="btn btn-primary">Annuler</button></a>
+        </div>
+    </div>
+    {{ form_end(modifyEventForm) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/selectPlace.js') }}"></script>
+{% endblock %}

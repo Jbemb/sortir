@@ -1,5 +1,5 @@
 <?php
-namespace App\Commands;
+namespace App\Command;
 
 use App\Event\EventChangeState;
 use Symfony\Component\Console\Command\Command;
