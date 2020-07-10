@@ -17,21 +17,20 @@ class PlaceController extends AbstractController
     public function findPlaceByCity(Request $request, CityRepository $cityRepo, PlaceRepository $placeRepo)
     {
         //get id from http request
-        $cityId = $request->query->get('cityId');
+        $cityId = $request->request->get('cityId');
 
         //find city object in bdd
-        $city =$cityRepo->find($cityId);
-        //get array of places based on the city
-        $places = $placeRepo->findBy(
-            ['city' => $city],
-            ['name' => 'ASC']
-        );
+        $city = $cityRepo->find($cityId);
 
-        //send response
+        //use method from repo to get places
+        $places = $placeRepo->findPlacesByCity($city);
+
         $response = new JsonResponse($places);
         return $response;
-        //return $this->render('place/index.html.twig', [
-        //    'results'        => $places
-        //]);
+        /*
+        return $this->render('place/index.html.twig', [
+           'results'        => $places
+        ]);
+        */
     }
 }

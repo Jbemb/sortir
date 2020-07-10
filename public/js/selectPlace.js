@@ -8,19 +8,29 @@ let dbRequest = new XMLHttpRequest();
 
 function addPlaces(evt){
     //recup la valeur choisie dans la liste déroulante
-   //let chosenCity = evt.target.value;
-   let chosenCity = city.value;
-   console.log(url + chosenCity);
+   let chosenCity = evt.target.value;
 
-   dbRequest.open('POST', url);
+   $.post(
+       url,
+       {
+          cityId: chosenCity
+       },
+       function(data){
+          console.log(data);
+       }
+   );
+
+  /* dbRequest.open('POST', url);
    // url? or file on the server with the code? ('GET', "nameoffichier.php?q="+chosenCity, true)
 
    dbRequest.onreadystatechange = () => {
       //when response is ready and successful
       if(dbRequest.readyState === 4 && dbRequest.status == 200){
          //get response
-         const response = JSON.parse(dbRequest.response);
-         console.log(response);
+         console.log('coucou');
+         console.log(dbRequest.responseText);
+         let response = JSON.parse(dbRequest.response);
+
 
          // add array to drop down menu
          for(p in response) {
@@ -31,7 +41,7 @@ function addPlaces(evt){
       }
    }
 
-   dbRequest.send( "cityId=" + chosenCity);
+   dbRequest.send( "cityId=" + chosenCity);*/
 }
 
 
