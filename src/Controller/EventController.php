@@ -197,7 +197,7 @@ class EventController extends AbstractController
             if ($modifyEventForm->get('delete')->isClicked()){
                 $em->remove($event);
                 $em->flush();
-                $this->addFlash("success", "Sortie supprimée");
+                $this->addFlash("success", "La sortie a été supprimée");
             }else{
                 if ($modifyEventForm->get('saveAndAdd')->isClicked()) {
                     $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
@@ -209,7 +209,7 @@ class EventController extends AbstractController
                 $em->persist($event);
                 $em->flush();
 
-                $this->addFlash("success", "Sortie modifiée");
+                $this->addFlash("success", "Votre sortie a été modifiée");
             }
                 return $this->redirectToRoute('home');
         }
