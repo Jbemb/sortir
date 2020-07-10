@@ -9,14 +9,20 @@ use App\Repository\StateRepository;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class EventChangeState
 {
     private $doctrine;
+    private $params;
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(ManagerRegistry $doctrine, ParameterBagInterface $params)
     {
         $this->doctrine = $doctrine;
+        $this->params = $params;
     }
 
     /**
@@ -24,6 +30,14 @@ class EventChangeState
      */
     public function changeState()
     {
+        $date = new DateTime();
+
+        // create a log channel
+        $log = new Logger('check_state_events');
+        $log->pushHandler(new StreamHandler($this->params->get('kernel.logs_dir') . '/check_state_events.log', Logger::DEBUG));
+
+        $log->addInfo('Service started at ' . date_format($date, 'Y-m-d H:i:s'));
+
         $em = $this->doctrine->getManager();
 
         //Récupérer tous les states.
@@ -40,34 +54,54 @@ class EventChangeState
 
         //nbInscrits=nbMaxInscrits ou date > dateClôture
         foreach ($eventsOpen as $event) {
-            $Full = $this->isFull($event);
-            if (new DateTime() > $event->getInscriptionLimit() || $Full == true) {
+            $isFull = $this->isFull($event);
+
+            if ($date > $event->getInscriptionLimit() || $isFull) {
                 $event->setState($stateClose);
                 $em->persist($event);
+
+                // Log
+                if ($date > $event->getInscriptionLimit()) {
+                    $cause = 'now: ' . date_format($date, 'Y-m-d H:i:s') . ' > inscription limit' . date_format($event->getInscriptionLimit(), 'Y-m-d H:i:s');
+                } else {
+                    $cause = 'event is full';
+                }
+                $log->addInfo('Close event : id: ' . $event->getId() . ', name: ' . $event->getName() . '. Cause: ' . $cause);
             }
         }
         $em->flush();
 
-
+/*
         //Passage de clôturé à ouverts
         $eventsClose = $eventRepo->findBy(['state' => $stateClose]);
         //nbInscrits<nbMaxInscrits et date <= dateClôture
         foreach ($eventsClose as $event) {
-            $notFull = $this->isFull($event);
-            if (new DateTime() <= $event->getInscriptionLimit() && $notFull == false) {
+            if ($date <= $event->getInscriptionLimit() && !$this->isFull($event)) {
                 $event->setState($stateOpen);
                 $em->persist($event);
+
+                // Log
+                if ($date <= $event->getInscriptionLimit()) {
+                    $cause = 'now: ' . date_format($date, 'Y-m-d H:i:s') . ' <= inscription limit' . date_format($event->getInscriptionLimit(), 'Y-m-d H:i:s');
+                } else {
+                    $cause = 'event is not full';
+                }
+                $log->addInfo('Open event : id: ' . $event->getId() . ', name: ' . $event->getName() . '. Cause: ' . $cause);
             }
         }
         $em->flush();
+*/
 
         //Passage de clôturée à activité en cours
         $eventsClosed = $eventRepo->findBy(['state' => $stateClose]);
         foreach ($eventsClosed as $event) {
-            $onGoing = $this->isOnGoing($event);
-            if ($onGoing == true) {
+            if ($this->isOnGoing($event)) {
                 $event->setState($stateOnGoing);
                 $em->persist($event);
+
+                // Log
+                $cause = 'now: ' . date_format($date, 'Y-m-d H:i:s') . ' between start event' . date_format($event->getStartDateTime(), 'Y-m-d H:i:s') . ' and end event +' . $event->getDuration() . ' minutes';
+                $log->addInfo('OnGoing event : id: ' . $event->getId() . ', name: ' . $event->getName() . '. Cause: ' . $cause);
             }
         }
         $em->flush();
@@ -79,9 +113,14 @@ class EventChangeState
             if ($isFinished == true) {
                 $event->setState($stateOver);
                 $em->persist($event);
+
+                // Log
+                $cause = 'now: ' . date_format($date, 'Y-m-d H:i:s') . ' > end event ' . date_format($event->getStartDateTime(), 'Y-m-d H:i:s') . ' +' . $event->getDuration() . ' minutes';
+                $log->addInfo('Over event : id: ' . $event->getId() . ', name: ' . $event->getName() . '. Cause: ' . $cause);
             }
         }
         $em->flush();
+
 
         return $eventsOnGoing;
     }
@@ -198,7 +237,7 @@ class EventChangeState
         $eventRepo = $this->doctrine->getRepository(Event::class);
         $eventsCancel = $eventRepo->findBy(['state' => $stateCancel]);
         $eventsOver = $eventRepo->findBy(['state' => $stateOver]);
-        $eventsVerify =array_merge($eventsCancel, $eventsOver);
+        $eventsVerify = array_merge($eventsCancel, $eventsOver);
 
         foreach ($eventsVerify as $event) {
             // get end date

@@ -1,0 +1,11 @@
+Go the task properties (Planificateur de tâches or Task Scheduler)
+    --> Action tab
+    --> Edit
+    --> Fill up as below:
+
+Action:
+    Start a program
+Program/script:
+    path to your batch script e.g. C:\wamp64\www\sortir\check_state_events.bat
+Start in (on the right panel):
+    Put the full path to your batch script location e.g. C:\wamp64\www\sortir\ (Do not put quotes around Start In)

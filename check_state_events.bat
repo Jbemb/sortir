@@ -1,0 +1,1 @@
+php bin/console app:check:state_events
