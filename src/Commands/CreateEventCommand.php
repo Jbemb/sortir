@@ -22,13 +22,15 @@ class CreateEventCommand extends Command
 
     protected function configure()
     {
-        $this->setHelp('Cette commande met à jour la base de donnée');
+        $this->setHelp('Configurer votre planificateur de tâche.');
+        $this->setHelp('Cette commande met à jour les états des sorties dans la base de donnée');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->eventChangeState->changeState();
-
+        $output->writeln('Les états des sorties sont à jour.');
+        $output->writeln('Félicitation!! La base de donnée est à jour.');
 
         return 0;
     }
