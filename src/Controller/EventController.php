@@ -11,6 +11,7 @@ use App\Entity\State;
 use App\Form\EventType;
 use App\Form\ModifyEventType;
 use App\Repository\EventRepository;
+use App\Repository\PlaceRepository;
 use App\Repository\StateRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
@@ -186,16 +187,23 @@ class EventController extends AbstractController
     /**
      * @Route("/sortie/modifier/{id}", name="event_modify", requirements={"id"="\d+"})
      */
-    public function modify($id, EntityManagerInterface $em, Request $request, StateRepository $stateRepo){
+    public function modify($id, EntityManagerInterface $em, Request $request, StateRepository $stateRepo, PlaceRepository $placeRepository ){
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
         $event = $eventRepo->find($id);
 
         $eventPlace = $event->getPlace();
         $eventCity = $eventPlace->getCity();
+        $placesCity = $placeRepository->placesByCity($eventCity);
+
+        $placesNameCity = array();
+        foreach ($placesCity as $place){
+            $name = $place->getName();
+            array_push($placesNameCity, $name);
+        }
 
         $eventStatus = $event->getState();
         $stateCreated = $stateRepo->findOneBy(['name' => 'Créée']);
-        $modifyEventForm = $this->createForm(ModifyEventType::class, $event, array('eventCity'=>$eventCity));
+        $modifyEventForm = $this->createForm(ModifyEventType::class, $event, array('eventCity'=>$eventCity, 'placesCity'=>$placesNameCity));
         $modifyEventForm->handleRequest($request);
 
         if ($eventStatus==$stateCreated){
@@ -224,7 +232,9 @@ class EventController extends AbstractController
             }
             return $this->render('event/modify.html.twig', [
                 'modifyEventForm' => $modifyEventForm->createView(),
-                'event'=>$event
+                'event'=>$event,
+                'placesCity'=>$placesCity,
+                'eventCity'=>$eventCity
             ]);
         }else{
             return $this->redirectToRoute('home');

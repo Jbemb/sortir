@@ -25,6 +25,7 @@ class ModifyEventType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $eventCity = $options['eventCity'];
+        $placesCity = $options['placesCity'];
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom de la sortie'
@@ -63,11 +64,10 @@ class ModifyEventType extends AbstractType
                         ->setParameter('param' , $eventCity);
                 }
             ])
-/*            ->add('place', EntityType::class, [
-                'label'=>'Rue',
-                'class'=> Place::class,
-                'choice_label'=>'street',
-                'disabled'=>true,
+/*            ->add('place', ChoiceType::class, [
+                'label'=>'Lieu',
+                'choices'=> $placesCity,
+                //'choice_label'=> $placesCity,
             ])*/
 
 
@@ -85,6 +85,7 @@ class ModifyEventType extends AbstractType
         ]);
         $resolver->setRequired([
             'eventCity',
+            'placesCity',
         ]);
     }
 }

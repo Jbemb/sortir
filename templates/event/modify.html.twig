@@ -11,11 +11,12 @@
     {{ form_row(modifyEventForm.campus) }}
     {{ form_row(modifyEventForm.place) }}
 
-    <ul>
-    {% for place in modifyEventForm.place %}
-        <li>{{ form_row(place.street) }}</li>
+    {% for place  in placesCity  %}
+        {% if place.name == event.place.name %}
+    <label for="rue">Rue </label>
+    <input type="text" id="rue" name="rue" value="{{ place.street }}">
+        {% endif %}
     {% endfor %}
-    </ul>
 
     <div class="button_center">
         {{ form_row(modifyEventForm.save) }}
