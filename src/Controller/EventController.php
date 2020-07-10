@@ -183,39 +183,45 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/modify/{id}", name="event_modify", requirements={"id"="\d+"})
+     * @Route("/sortie/modifier/{id}", name="event_modify", requirements={"id"="\d+"})
      */
     public function modify($id, EntityManagerInterface $em, Request $request, StateRepository $stateRepo){
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
         $event = $eventRepo->find($id);
+
+        $eventStatus = $event->getState();
+        $stateCreated = $stateRepo->findOneBy(['name' => 'Créée']);
         $modifyEventForm = $this->createForm(ModifyEventType::class, $event);
         $modifyEventForm->handleRequest($request);
 
-        if ($modifyEventForm->isSubmitted() && $modifyEventForm->isValid()){
-            $state= new State;
+        if ($eventStatus==$stateCreated){
+            if ($modifyEventForm->isSubmitted() && $modifyEventForm->isValid()){
+                $state= new State;
 
-            if ($modifyEventForm->get('delete')->isClicked()){
-                $em->remove($event);
-                $em->flush();
-                $this->addFlash("success", "Sortie supprimée");
-            }else{
-                if ($modifyEventForm->get('saveAndAdd')->isClicked()) {
-                    $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
+                if ($modifyEventForm->get('delete')->isClicked()){
+                    $em->remove($event);
+                    $em->flush();
+                    $this->addFlash("success", "La sortie a été supprimée");
+                }else{
+                    if ($modifyEventForm->get('saveAndAdd')->isClicked()) {
+                        $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
 
-                }elseif ($modifyEventForm->get('save')->isClicked()){
-                    $state = $stateRepo->findOneBy(['name' => 'Créée']);
+                    }elseif ($modifyEventForm->get('save')->isClicked()){
+                        $state = $stateRepo->findOneBy(['name' => 'Créée']);
+                    }
+                    $event->setState($state);
+                    $em->persist($event);
+                    $em->flush();
+
+                    $this->addFlash("success", "Votre sortie a été modifiée");
                 }
-                $event->setState($state);
-                $em->persist($event);
-                $em->flush();
-
-                $this->addFlash("success", "Sortie modifiée");
+                    return $this->redirectToRoute('home');
             }
-                return $this->redirectToRoute('home');
+            return $this->render('event/modify.html.twig', [
+                'modifyEventForm' => $modifyEventForm->createView()
+            ]);
+        }else{
+            return $this->redirectToRoute('home');
         }
-
-        return $this->render('event/modify.html.twig', [
-            'modifyEventForm' => $modifyEventForm->createView()
-        ]);
     }
 }
