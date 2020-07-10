@@ -11,6 +11,12 @@
     {{ form_row(modifyEventForm.campus) }}
     {{ form_row(modifyEventForm.place) }}
 
+    <ul>
+    {% for place in modifyEventForm.place %}
+        <li>{{ form_row(place.street) }}</li>
+    {% endfor %}
+    </ul>
+
     <div class="button_center">
         {{ form_row(modifyEventForm.save) }}
         {{ form_row(modifyEventForm.saveAndAdd) }}
