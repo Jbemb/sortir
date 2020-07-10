@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\City;
 use App\Entity\Event;
+use App\Entity\Place;
 use App\Event\EventChangeState;
 use App\Form\CancelEventType;
 use App\Entity\State;
@@ -189,12 +190,16 @@ class EventController extends AbstractController
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
         $event = $eventRepo->find($id);
 
+        $eventPlace = $event->getPlace();
+        $eventCity = $eventPlace->getCity();
+
         $eventStatus = $event->getState();
         $stateCreated = $stateRepo->findOneBy(['name' => 'Créée']);
-        $modifyEventForm = $this->createForm(ModifyEventType::class, $event);
+        $modifyEventForm = $this->createForm(ModifyEventType::class, $event, array('eventCity'=>$eventCity));
         $modifyEventForm->handleRequest($request);
 
         if ($eventStatus==$stateCreated){
+
             if ($modifyEventForm->isSubmitted() && $modifyEventForm->isValid()){
                 $state= new State;
 
@@ -218,7 +223,8 @@ class EventController extends AbstractController
                     return $this->redirectToRoute('home');
             }
             return $this->render('event/modify.html.twig', [
-                'modifyEventForm' => $modifyEventForm->createView()
+                'modifyEventForm' => $modifyEventForm->createView(),
+                'event'=>$event
             ]);
         }else{
             return $this->redirectToRoute('home');

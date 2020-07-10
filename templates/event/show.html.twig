@@ -91,7 +91,7 @@
                             </div>
                             {% for participant in event.participants %}
                                 <div class="row">
-                                    <div class="col-5">{{ participant.username }}</div>
+                                    <div class="col-5"><a href="{{ path('user_profil', {'id': participant.id}) }}">{{ participant.username }}</a></div>
                                     <div class="col-7">{{ participant.firstname }} {{ participant.lastname }}</div>
                                 </div>
                             {% endfor %}
@@ -108,6 +108,6 @@
 {% endblock %}
 
 {% block title %}
-    parent() - Sortie {{ event.name }}
+    {{ parent() }} - Sortie {{ event.name }}
 {% endblock %}
 
