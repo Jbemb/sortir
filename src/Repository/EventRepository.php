@@ -28,8 +28,11 @@ class EventRepository extends ServiceEntityRepository
     public function search(Search $search, User $user)
     {
         $qb = $this->createQueryBuilder('e')
-            ->join('e.state', 's');
-
+            ->join('e.state', 's')
+            ->addSelect('s')
+            ->join('e.participants', 'p')
+            ->addSelect('p')
+        ;
 
         $qb->andWhere('e.campus = :campus')
             ->setParameter('campus', $search->getCampus());
@@ -40,35 +43,45 @@ class EventRepository extends ServiceEntityRepository
         }
 
         if (!is_null($search->getStartDate())) {
-            $qb->andWhere('e.startDateTime > :startDate')
-                ->orWhere('e.startDateTime = :startDate')
+            $qb->andWhere('e.startDateTime > :startDate or e.startDateTime = :startDate')
+//                ->orWhere('e.startDateTime = :startDate')
                 ->setParameter('startDate', $search->getStartDate());
         }
 
         if (!is_null($search->getEndDate())) {
-            $qb->andWhere('e.startDateTime < :endDate')
-                ->orWhere('e.startDateTime = :endDate')
+            $qb->andWhere('e.startDateTime < :endDate or e.startDateTime = :endDate')
+//                ->orWhere('e.startDateTime = :endDate')
                 ->setParameter('endDate', $search->getEndDate());
         }
 
         if ($search->isOrganiser()) {
-            $organiser = 'e.organiser = :organiser';
-        } else {
-            $organiser = 'e.organiser NOT IN (:organiser)';
+            $qb->andWhere('e.organiser = :organiser');
+            $qb->setParameter('organiser', $user);
         }
-
-
 
         if ($search->isPassedEvent()) {
-            $passed = 's.name = :passed';
-        } else {
-            $passed = 's.name NOT IN (:passed)';
+            $qb->andWhere('s.name = :passed');
+            $qb->setParameter('passed', State::PASSED);
         }
 
-        $qb->andWhere($organiser /*. ' or ' . $passed*/);
-        $qb->andWhere($passed);
-        $qb->setParameter('organiser', $user);
-        $qb->setParameter('passed', State::PASSED);
+        if ($search->isSignedUp()) {
+            $qb->andWhere('p = :signedUpUser');
+            $qb->setParameter('signedUpUser', $user);
+        }
+
+        if ($search->isNotSignedUp()) {
+            $eventsToExclude = $this->createQueryBuilder('e')
+                ->join('e.participants', 'p')
+                ->where('p = :signedUpUser')
+                ->setParameter('signedUpUser', $user)
+                ->getQuery()
+                ->getResult()
+            ;
+            $qb->andWhere('e NOT IN (:eventsToExclude)')
+                ->setParameter('eventsToExclude', $eventsToExclude);
+        }
+
+
 
 
         return $qb->getQuery()->getResult();
