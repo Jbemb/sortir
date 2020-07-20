@@ -31,7 +31,7 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/ajouter", name="event_add", methods={"Post"})
+     * @Route("/sortie/ajouter", name="event_add")
      *
      */
     public function add(Request $request, EntityManagerInterface $em, UserRepository $userRepo, StateRepository $stateRepo)
@@ -48,7 +48,7 @@ class EventController extends AbstractController
 
         $eventForm->handleRequest($request);
 
-        if ($eventForm->isSubmitted()){
+        if ($eventForm->isSubmitted() && $eventForm->isValid()){
             $state= new State;
 
             if ($eventForm->get('saveAndAdd')->isClicked()) {

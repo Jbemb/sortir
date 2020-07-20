@@ -35,7 +35,6 @@ class EventType extends AbstractType
                     'placeholder' => 90,
                     'min' => 0
                 ],
-
             ])
             ->add('city', EntityType::class, [
                 'label' => 'Ville',
@@ -45,25 +44,15 @@ class EventType extends AbstractType
                 'placeholder' => 'Sélectionnez une ville'
             ])
 
-//            ->add('place', EntityType::class,[
-//                'required' => true,
-//                'placeholder' => 'Select a City first ...',
-//                'class' =>Place::class
-//
+//            ->add('place', ChoiceType::class, [
+////                'mapped' => false,
+//                'label' => 'Lieu',
+//                'class' => Place::class
+////                'choices'=>[]
+//////                'class' => Place::class,
+//////              //  'choice_label' => 'name'
 //            ])
-
-
-            ->add('placeChoice', ChoiceType::class, [
-//                'mapped' => false,
-                'label' => 'Lieu',
-//                'choices'=>[]
-////                'class' => Place::class,
-////              //  'choice_label' => 'name'
-            ])
-            ->add('place', PlaceHiddenType::class, [
-
-
-            ])
+            ->add('place', PlaceHiddenType::class)
             //se baser sur ce code pr js/ajax
             //<div class="form-group"><label class="required" for="event_place">Lieu</label><select id="event_place" name="event[place]" class="form-control"><option value="10">plage</option><option value="11">bar</option><option value="12">bowling</option><option value="13">ballade</option><option value="14">chez Lulu</option><option value="15">Réu CDA</option><option value="16">quartier du coin</option><option value="17">au bar de la rue qui tourne</option></select></div>
 

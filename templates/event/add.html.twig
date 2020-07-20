@@ -10,7 +10,14 @@
     {{ form_row(eventForm.duration) }}
     {{ form_row(eventForm.eventInfo) }}
     {{ form_row(eventForm.city) }}
+    {#
     {{ form_row(eventForm.placeChoice) }}
+    #}
+
+    <div class="form-group">
+        <label class="required" for="event_placeChoice">Lieu</label>
+        <select id="event_placeChoice" class="form-control"></select>
+    </div>
 
     <div class="button_center">
         {{ form_row(eventForm.save) }}
