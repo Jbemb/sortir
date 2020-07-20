@@ -31,7 +31,7 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/ajouter", name="event_add", methods={"Post"})
+     * @Route("/sortie/ajouter", name="event_add")
      *
      */
     public function add(Request $request, EntityManagerInterface $em, UserRepository $userRepo, StateRepository $stateRepo)

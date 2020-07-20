@@ -6,15 +6,27 @@
 
 {% block main %}
 <h1>Annuler une sortie</h1>
+<br>
+    <span>Nom de la sortie:</span><span class="text-info"> {{ event.name}} </span>
 
-    <p>Nom de la sortie: {{ event.name}} </p>
-    <p>Date de la sortie : {{ event.startDateTime|date("Y-m-d H:i:s") }} </p>
-    <p>Campus: {{ event.campus.name }} </p>
-    <p>Lieu : {{ event.place.name}} </p>
+    <br>
+    <br>
+    <span>Date de la sortie : </span><span class="text-info" >{{ event.startDateTime|date("Y-m-d H:i:s") }} </span>
 
+    <br>
+    <br>
+    <span>Campus: </span><span class="text-info">{{ event.campus.name }} </span>
+
+    <br>
+    <br>
+    <span>Lieu : </span><span class="text-info">{{ event.place.name}} </span>
+    <br>
+    <br>
 
          {{ form_start(cancelEventFormView) }}
          {{ form_row(cancelEventFormView.reasonDelete) }}
+    <br>
+    <br>
     <div class="button_center">
         {{ form_row(cancelEventFormView.Enregistrer) }}
         {{ form_end(cancelEventFormView) }}
