@@ -161,10 +161,10 @@ class EventController extends AbstractController
         $event = $repo->find($id);
 
         //check if event has started or not to not have access if true
-        if($ecs->hasStarted($event)){
-            $this->addFlash('success', 'La sortie ' . $event->getName(). ' ne peut etre annulée, elle est actuellement en cours ou déjà passée!' );
-            return  $this->redirectToRoute('home');
-        }else{
+        if ($ecs->hasStarted($event)) {
+            $this->addFlash('success', 'La sortie ' . $event->getName() . ' ne peut etre annulée, elle est actuellement en cours ou déjà passée!');
+            return $this->redirectToRoute('home');
+        } else {
             $cancelEventForm = $this->createForm(CancelEventType::class, $event);
             //recupere les infos du form
             $cancelEventForm->handleRequest($request);
@@ -179,8 +179,8 @@ class EventController extends AbstractController
                 $em->persist($event);
                 $em->flush();
 
-                $this->addFlash('success',  'La sortie ' . $event->getName() . ' est annulée');
-                return  $this->redirectToRoute('home');
+                $this->addFlash('success', 'La sortie ' . $event->getName() . ' est annulée');
+                return $this->redirectToRoute('home');
             }
 
             $cancelEventFormView = $cancelEventForm->createView();
@@ -226,52 +226,67 @@ class EventController extends AbstractController
      *     name="event_modify",
      *     requirements={"id"="\d+"},
      *     methods={"GET", "Post"})
+     * @param $id
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @param StateRepository $stateRepo
+     * @param $eventRepository
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function modify($id, EntityManagerInterface $em, Request $request, StateRepository $stateRepo)
     {
+        $user = $this->security->getUser();
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
         $event = $eventRepo->find($id);
 
-        $eventPlace = $event->getPlace();
-        $eventCity = $eventPlace->getCity();
-
-        $eventStatus = $event->getState();
-        $stateCreated = $stateRepo->findOneBy(['name' => 'Créée']);
-        $modifyEventForm = $this->createForm(ModifyEventType::class, $event, array('eventCity' => $eventCity));
-        $modifyEventForm->handleRequest($request);
-
-        if ($eventStatus == $stateCreated) {
-
-            if ($modifyEventForm->isSubmitted() && $modifyEventForm->isValid()) {
-                $state = new State;
-
-                if ($modifyEventForm->get('delete')->isClicked()) {
-                    $em->remove($event);
-                    $em->flush();
-                    $this->addFlash("success", "La sortie a été supprimée");
-                } else {
-
-                    if ($modifyEventForm->get('saveAndAdd')->isClicked()) {
-                        $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
-
-                    } elseif ($modifyEventForm->get('save')->isClicked()) {
-                        $state = $stateRepo->findOneBy(['name' => 'Créée']);
-                    }
-                    $event->setState($state);
-                    $em->persist($event);
-                    $em->flush();
-
-                    $this->addFlash("success", "Votre sortie a été modifiée");
-                }
-                return $this->redirectToRoute('home');
-            }
-            return $this->render('event/modify.html.twig', [
-                'modifyEventForm' => $modifyEventForm->createView(),
-                'event' => $event,
-                'eventCity' => $eventCity
-            ]);
+        if ($user != $event->getOrganiser()) {
+            $this->addFlash("warning", "Vous n'êtes pas l'organisateur de cette sortie");
         } else {
-            return $this->redirectToRoute('home');
+
+            $eventPlace = $event->getPlace();
+            $eventCity = $eventPlace->getCity();
+
+            $eventStatus = $event->getState();
+            $stateCreated = $stateRepo->findOneBy(['name' => 'Créée']);
+            $modifyEventForm = $this->createForm(ModifyEventType::class, $event, array('eventCity' => $eventCity));
+            $modifyEventForm->handleRequest($request);
+
+            if ($eventStatus == $stateCreated) {
+
+                if ($modifyEventForm->isSubmitted() && $modifyEventForm->isValid()) {
+                    $state = new State;
+
+                    if ($modifyEventForm->get('delete')->isClicked()) {
+                        $em->remove($event);
+                        $em->flush();
+                        $this->addFlash("success", "La sortie a été supprimée");
+                    } else {
+
+                        if ($modifyEventForm->get('saveAndAdd')->isClicked()) {
+                            $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
+
+                        } elseif ($modifyEventForm->get('save')->isClicked()) {
+                            $state = $stateRepo->findOneBy(['name' => 'Créée']);
+                        }
+                        $event->setState($state);
+                        $em->persist($event);
+                        $em->flush();
+
+                        $this->addFlash("success", "Votre sortie a été modifiée");
+                    }
+
+                    return $this->redirectToRoute('home');
+                }
+                return $this->render('event/modify.html.twig', [
+                    'modifyEventForm' => $modifyEventForm->createView(),
+                    'event' => $event,
+                    'eventCity' => $eventCity
+                ]);
+            } else {
+                $this->addFlash("warning", "Seules les sorties créées et non publiées peuvent être modifiées");
+            }
+
         }
+        return $this->redirectToRoute('home');
     }
 }
