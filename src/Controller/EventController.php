@@ -185,25 +185,18 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/modifier/{id}", name="event_modify", requirements={"id"="\d+"})
+     * @Route("/sortie/modifier/{id}", name="event_modify", requirements={"id"="\d+"}, methods={"GET", "Post"})
      */
-    public function modify($id, EntityManagerInterface $em, Request $request, StateRepository $stateRepo, PlaceRepository $placeRepository ){
+    public function modify($id, EntityManagerInterface $em, Request $request, StateRepository $stateRepo ){
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
         $event = $eventRepo->find($id);
 
         $eventPlace = $event->getPlace();
         $eventCity = $eventPlace->getCity();
-        $placesCity = $placeRepository->placesByCity($eventCity);
-
-        $placesNameCity = array();
-        foreach ($placesCity as $place){
-            $name = $place->getName();
-            array_push($placesNameCity, $name);
-        }
 
         $eventStatus = $event->getState();
         $stateCreated = $stateRepo->findOneBy(['name' => 'Créée']);
-        $modifyEventForm = $this->createForm(ModifyEventType::class, $event, array('eventCity'=>$eventCity, 'placesCity'=>$placesNameCity));
+        $modifyEventForm = $this->createForm(ModifyEventType::class, $event, array('eventCity'=>$eventCity));
         $modifyEventForm->handleRequest($request);
 
         if ($eventStatus==$stateCreated){
@@ -216,6 +209,7 @@ class EventController extends AbstractController
                     $em->flush();
                     $this->addFlash("success", "La sortie a été supprimée");
                 }else{
+
                     if ($modifyEventForm->get('saveAndAdd')->isClicked()) {
                         $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
 
@@ -233,7 +227,6 @@ class EventController extends AbstractController
             return $this->render('event/modify.html.twig', [
                 'modifyEventForm' => $modifyEventForm->createView(),
                 'event'=>$event,
-                'placesCity'=>$placesCity,
                 'eventCity'=>$eventCity
             ]);
         }else{

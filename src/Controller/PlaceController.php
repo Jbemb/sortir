@@ -33,4 +33,17 @@ class PlaceController extends AbstractController
         ]);
         */
     }
+
+    /**
+     * @Route("/streetplace", name="street_of_the_place", methods={"POST"})
+     */
+    public function findStreetPlace(Request $request, PlaceRepository $placeRepo){
+        $placeId = $request->request->get('placeId');
+
+        $place = $placeRepo->find($placeId);
+        $street = $place->getStreet();
+
+        $response = new JsonResponse($street);
+        return $response;
+    }
 }

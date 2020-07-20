@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\City;
 use App\Entity\Place;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,14 +20,13 @@ class PlaceRepository extends ServiceEntityRepository
         parent::__construct($registry, Place::class);
     }
 
-    public function placesByCity($eventCity){
-        $qb = $this->createQueryBuilder('p');
-        $qb->andWhere('p.city = :param')
-            ->setParameter('param', $eventCity)
-            ->addOrderBy('p.name', 'ASC');
-        $query = $qb->getQuery();
-        $result = $query->getResult();
-        return $result;
+    public function findPlacesByCity(City $city){
+        return$this->createQueryBuilder('p')
+            ->andWhere("p.city = :city")
+            ->setParameter(":city", $city)
+            ->orderBy('p.name', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
     }
 
     // /**
