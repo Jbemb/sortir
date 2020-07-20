@@ -128,7 +128,7 @@ class EventController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
 
-        //check if event has started or not to no have access if true
+        //check if event has started or not to not have access if true
         if($ecs->hasStarted($event)){
             $this->addFlash('success', 'La sortie ' . $event->getName(). ' ne peut etre annulée, elle est actuellement en cours ou déjà passée!' );
             return  $this->redirectToRoute('home');
@@ -146,6 +146,8 @@ class EventController extends AbstractController
 
                 $em->persist($event);
                 $em->flush();
+
+                $this->addFlash('success',  'La sortie, ' . $event->getName() . ', est annulée');
                 return  $this->redirectToRoute('home');
             }
 
