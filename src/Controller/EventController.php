@@ -70,7 +70,37 @@ class EventController extends AbstractController
             'eventForm' => $eventForm->createView()
         ]);
     }
-    
+
+    /**
+     * @Route("/sortie/{id}/publier",
+     *     name="event_publish",
+     *     requirements={"id"="\d+"}
+     *     )
+     */
+    public function publish($id, EntityManagerInterface $em, StateRepository $stateRepo, EventRepository $eventRepository)
+    {
+        $user = $this->security->getUser();
+        $event = $eventRepository->find($id);
+
+        if ($user != $event->getOrganiser()) {
+            $this->addFlash("warning", "Vous n'êtes pas l'organisateur de cette sortie");
+        } else {
+            $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
+
+            $event->setState($state);
+            $em->persist($event);
+            $em->flush();
+
+            $this->addFlash("success", 'La sortie ' . $event->getName() . ' a été publiée');
+
+        }
+
+        return $this->redirectToRoute(
+            'home'
+        );
+    }
+
+
     /**
      * @Route("/sortie/{id}/inscription",
      *     name="event_signup",
