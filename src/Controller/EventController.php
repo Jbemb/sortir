@@ -48,13 +48,13 @@ class EventController extends AbstractController
 
         $eventForm->handleRequest($request);
 
-        if ($eventForm->isSubmitted() && $eventForm->isValid()){
-            $state= new State;
+        if ($eventForm->isSubmitted() && $eventForm->isValid()) {
+            $state = new State;
 
             if ($eventForm->get('saveAndAdd')->isClicked()) {
                 $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
 
-            }elseif ($eventForm->get('save')->isClicked()){
+            } elseif ($eventForm->get('save')->isClicked()) {
                 $state = $stateRepo->findOneBy(['name' => 'Créée']);
             }
             $event->setState($state);
@@ -70,7 +70,36 @@ class EventController extends AbstractController
             'eventForm' => $eventForm->createView()
         ]);
     }
-    
+
+    /**
+     * @Route("/sortie/{id}/publier",
+     *     name="event_publish",
+     *     requirements={"id"="\d+"}
+     *     )
+     */
+    public function publish($id, EntityManagerInterface $em, StateRepository $stateRepo, EventRepository $eventRepository)
+    {
+        $user = $this->security->getUser();
+        $event = $eventRepository->find($id);
+
+        if ($user != $event->getOrganiser()) {
+            $this->addFlash("warning", "Vous n'êtes pas l'organisateur de cette sortie");
+        } else {
+            $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
+
+            $event->setState($state);
+            $em->persist($event);
+            $em->flush();
+
+            $this->addFlash("success", 'La sortie ' . $event->getName() . ' a été publiée');
+
+        }
+
+        return $this->redirectToRoute(
+            'home'
+        );
+    }
+
     /**
      * @Route("/sortie/{id}/inscription",
      *     name="event_signup",
@@ -79,26 +108,26 @@ class EventController extends AbstractController
      */
     public function signUp($id, EventRepository $eventRepository, EntityManagerInterface $em, UserRepository $userRepository, StateRepository $stateRepo, EventChangeState $ecs)
     {
-        $user = $userRepository->findOneBy(['username' => $this->security->getUser()->getUsername()]) ;
+        $user = $userRepository->findOneBy(['username' => $this->security->getUser()->getUsername()]);
         $event = $eventRepository->find($id);
         //double check that event is open
-        if($event->getState()->getName() == 'Ouverte'){
+        if ($event->getState()->getName() == 'Ouverte') {
             $event->addParticipant($user);
 
             //check if it is full and change status if needed
-             if($ecs->isFull($event)){
-                 $state = $stateRepo->findOneBy(['name' => 'Clôturée']);
-                 $event->setState($state);
+            if ($ecs->isFull($event)) {
+                $state = $stateRepo->findOneBy(['name' => 'Clôturée']);
+                $event->setState($state);
             }
 
             $em->persist($event);
             $em->flush();
 
             $this->addFlash('success', 'Vous vous êtes inscrit à la sortie : ' . $event->getName());
-            return  $this->redirectToRoute('home');
-        }else{
+            return $this->redirectToRoute('home');
+        } else {
             $this->addFlash('danger', 'Vous ne vous êtes pas inscrit à la sortie : ' . $event->getName());
-            return  $this->redirectToRoute('home');
+            return $this->redirectToRoute('home');
         }
 
     }
@@ -119,7 +148,10 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/annuler/{id}", name="event_cancel", methods={"GET", "POST"})
+     * @Route("/sortie/{id}/annuler",
+     *     name="event_cancel",
+     *     requirements={"id"="\d+"}
+     *     )
      */
     public function cancel($id, EventRepository $repo, Request $request, EntityManagerInterface $em, StateRepository $stateRepo, EventChangeState $ecs)
     {
@@ -129,24 +161,24 @@ class EventController extends AbstractController
         $event = $repo->find($id);
 
         //check if event has started or not to no have access if true
-        if($ecs->hasStarted($event)){
-            $this->addFlash('success', 'La sortie ' . $event->getName(). ' ne peut etre annulée, elle est actuellement en cours ou déjà passée!' );
-            return  $this->redirectToRoute('home');
-        }else{
+        if ($ecs->hasStarted($event)) {
+            $this->addFlash('success', 'La sortie ' . $event->getName() . ' ne peut etre annulée, elle est actuellement en cours ou déjà passée!');
+            return $this->redirectToRoute('home');
+        } else {
             $cancelEventForm = $this->createForm(CancelEventType::class, $event);
             //recupere les infos du form
             $cancelEventForm->handleRequest($request);
 
-            if ($cancelEventForm->isSubmitted() && $cancelEventForm->isValid()){
+            if ($cancelEventForm->isSubmitted() && $cancelEventForm->isValid()) {
 
-                $stateRepo= $this->getDoctrine()->getRepository(State::class);
-                $state = $stateRepo->findOneBy(array('name'=>'Annulée'));
+                $stateRepo = $this->getDoctrine()->getRepository(State::class);
+                $state = $stateRepo->findOneBy(array('name' => 'Annulée'));
 
                 $event->setState($state);
 
                 $em->persist($event);
                 $em->flush();
-                return  $this->redirectToRoute('home');
+                return $this->redirectToRoute('home');
             }
 
             $cancelEventFormView = $cancelEventForm->createView();
@@ -157,7 +189,10 @@ class EventController extends AbstractController
 
 
     /**
-     * @Route("/sortie/sedesister/{id}", name="event_withdraw")
+     * @Route("/sortie/{id}/desinscription",
+     *     name="event_withdraw",
+     *     requirements={"id"="\d+"}
+     *     )
      */
     public function withdraw($id, EventRepository $repo, UserRepository $userRepo, EntityManagerInterface $em, StateRepository $stateRepo, EventChangeState $ecs)
     {
@@ -170,24 +205,28 @@ class EventController extends AbstractController
         //update event participants
         $event->removeParticipant($user);
         //check if inscription date is not passed and it is not full change state to open
-        if($ecs->isPassedInscription($event) == false && $ecs->isFull($event) == false){
+        if ($ecs->isPassedInscription($event) == false && $ecs->isFull($event) == false) {
             //update state
             $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
             $event->setState($state);
         }
 
         //update database
-        $em -> persist($event);
-        $em -> flush($event);
+        $em->persist($event);
+        $em->flush($event);
 
         $this->addFlash("success", "Vous vous êtes désinscrit(e)");
-        return  $this->redirectToRoute('home');
+        return $this->redirectToRoute('home');
     }
 
     /**
-     * @Route("/sortie/modifier/{id}", name="event_modify", requirements={"id"="\d+"}, methods={"GET", "Post"})
+     * @Route("/sortie/{id}/modifier",
+     *     name="event_modify",
+     *     requirements={"id"="\d+"},
+     *     methods={"GET", "Post"})
      */
-    public function modify($id, EntityManagerInterface $em, Request $request, StateRepository $stateRepo ){
+    public function modify($id, EntityManagerInterface $em, Request $request, StateRepository $stateRepo)
+    {
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
         $event = $eventRepo->find($id);
 
@@ -196,24 +235,24 @@ class EventController extends AbstractController
 
         $eventStatus = $event->getState();
         $stateCreated = $stateRepo->findOneBy(['name' => 'Créée']);
-        $modifyEventForm = $this->createForm(ModifyEventType::class, $event, array('eventCity'=>$eventCity));
+        $modifyEventForm = $this->createForm(ModifyEventType::class, $event, array('eventCity' => $eventCity));
         $modifyEventForm->handleRequest($request);
 
-        if ($eventStatus==$stateCreated){
+        if ($eventStatus == $stateCreated) {
 
-            if ($modifyEventForm->isSubmitted() && $modifyEventForm->isValid()){
-                $state= new State;
+            if ($modifyEventForm->isSubmitted() && $modifyEventForm->isValid()) {
+                $state = new State;
 
-                if ($modifyEventForm->get('delete')->isClicked()){
+                if ($modifyEventForm->get('delete')->isClicked()) {
                     $em->remove($event);
                     $em->flush();
                     $this->addFlash("success", "La sortie a été supprimée");
-                }else{
+                } else {
 
                     if ($modifyEventForm->get('saveAndAdd')->isClicked()) {
                         $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
 
-                    }elseif ($modifyEventForm->get('save')->isClicked()){
+                    } elseif ($modifyEventForm->get('save')->isClicked()) {
                         $state = $stateRepo->findOneBy(['name' => 'Créée']);
                     }
                     $event->setState($state);
@@ -222,14 +261,14 @@ class EventController extends AbstractController
 
                     $this->addFlash("success", "Votre sortie a été modifiée");
                 }
-                    return $this->redirectToRoute('home');
+                return $this->redirectToRoute('home');
             }
             return $this->render('event/modify.html.twig', [
                 'modifyEventForm' => $modifyEventForm->createView(),
-                'event'=>$event,
-                'eventCity'=>$eventCity
+                'event' => $event,
+                'eventCity' => $eventCity
             ]);
-        }else{
+        } else {
             return $this->redirectToRoute('home');
         }
     }
