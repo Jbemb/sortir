@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -57,12 +58,6 @@ class Event
     private $eventInfo;
 
     /**
-     * @Assert\NotBlank(message="Veuillez sélectionner un lieu")
-     */
-    private $placeChoice;
-
-
-    /**
      * @ORM\ManyToOne(targetEntity=Place::class, inversedBy="events")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -111,22 +106,6 @@ class Event
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPlaceChoice()
-    {
-        return $this->placeChoice;
-    }
-
-    /**
-     * @param mixed $placeChoice
-     */
-    public function setPlaceChoice($placeChoice): void
-    {
-        $this->placeChoice = $placeChoice;
-    }
-
     public function getName(): ?string
     {
         return $this->name;
@@ -139,12 +118,12 @@ class Event
         return $this;
     }
 
-    public function getStartDateTime(): ?\DateTimeInterface
+    public function getStartDateTime(): ?DateTimeInterface
     {
         return $this->startDateTime;
     }
 
-    public function setStartDateTime(\DateTimeInterface $startDateTime): self
+    public function setStartDateTime(DateTimeInterface $startDateTime): self
     {
         $this->startDateTime = $startDateTime;
 
@@ -163,12 +142,12 @@ class Event
         return $this;
     }
 
-    public function getInscriptionLimit(): ?\DateTimeInterface
+    public function getInscriptionLimit(): ?DateTimeInterface
     {
         return $this->inscriptionLimit;
     }
 
-    public function setInscriptionLimit(\DateTimeInterface $inscriptionLimit): self
+    public function setInscriptionLimit(DateTimeInterface $inscriptionLimit): self
     {
         $this->inscriptionLimit = $inscriptionLimit;
 

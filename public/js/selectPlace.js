@@ -22,16 +22,13 @@ function addPlaces(evt) {
 
           $.each(data, function(key, p){
 
-
              let option = document.createElement('option');
               option.text = p.name;
               // option.setAttribute("data-value", p.id);
               option.value = p.id;
-              placeChoice.add(option);
+              placeChoice.appendChild(option);
               onChangeLieu();
           })
-
-
        }
    );
 }
