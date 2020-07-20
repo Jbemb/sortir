@@ -87,3 +87,8 @@ footer {
     background-color: #01A9B4FF;
     border-color: #01A9B4FF;
 }
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
