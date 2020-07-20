@@ -3,33 +3,58 @@
 {% block main %}
     <h1>Modifier une sortie</h1>
 
-    {{ form_start(modifyEventForm) }}
-    {{ form_row(modifyEventForm.name) }}
-    {{ form_row(modifyEventForm.startDateTime) }}
-    {{ form_row(modifyEventForm.inscriptionLimit) }}
-    {{ form_row(modifyEventForm.maxParticipant) }}
-    {{ form_row(modifyEventForm.duration) }}
-    {{ form_row(modifyEventForm.eventInfo) }}
-    {{ form_row(modifyEventForm.campus) }}
-    {{ form_row(modifyEventForm.place) }}
 
-    <div class="form-group">
-        <label for="rue">Rue </label>
-        <input type="text" id="rue" name="rue" value="{{ event.place.street }}" disabled class="form-control">
-    </div>
-    <div class="form-group">
-        <label for="codePostal">Code Postal </label>
-        <input type="text" id="codePostal" name="codePostal" value="{{ eventCity.getPostalCode }}" disabled class="form-control">
+
+    {{ form_start(modifyEventForm) }}
+    <div class="row">
+        <div class="col-md-12">
+            {{ form_row(modifyEventForm.name) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(modifyEventForm.startDateTime) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(modifyEventForm.inscriptionLimit) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(modifyEventForm.maxParticipant) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(modifyEventForm.duration) }}
+        </div>
+        <div class="col-md-12">
+            {{ form_row(modifyEventForm.eventInfo) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(modifyEventForm.campus) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(modifyEventForm.place) }}
+        </div>
+        <div class="form-group col-md-6">
+            <label for="rue">Rue </label>
+            <input type="text" id="rue" name="rue" value="{{ event.place.street }}" disabled class="form-control">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="codePostal">Code Postal </label>
+            <input type="text" id="codePostal" name="codePostal" value="{{ eventCity.getPostalCode }}" disabled
+                   class="form-control">
+        </div>
+
     </div>
     <div class="button_center">
         {{ form_row(modifyEventForm.save) }}
         {{ form_row(modifyEventForm.saveAndAdd) }}
         {{ form_row(modifyEventForm.delete) }}
         <div class="form-group">
-            <a href="{{ path('home') }}"><button class="btn btn-primary">Annuler</button></a>
+            <a href="{{ path('home') }}">
+                <button class="btn btn-primary">Annuler</button>
+            </a>
         </div>
     </div>
+
     {{ form_end(modifyEventForm) }}
+
 
 {% endblock %}
 

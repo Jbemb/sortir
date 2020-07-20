@@ -1,0 +1,9 @@
+label {
+    margin-top: 20px;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
