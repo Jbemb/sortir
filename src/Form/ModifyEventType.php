@@ -30,10 +30,14 @@ class ModifyEventType extends AbstractType
                 'label' => 'Nom de la sortie'
             ])
             ->add('startDateTime', DateTimeType::class, [
-                'label' => 'Date et heure de la sortie'
+                'label'     => 'Date et heure de la sortie',
+                'required'  => true,
+                'widget'    => 'single_text'
             ])
             ->add('inscriptionLimit', DateType::class, [
-                'label'=> "Date limite d'inscription"
+                'label'=> "Date limite d'inscription",
+                'required'  => true,
+                'widget'    => 'single_text',
             ])
             ->add('maxParticipant', NumberType::class, [
                 'label' => 'Nombre de place'
