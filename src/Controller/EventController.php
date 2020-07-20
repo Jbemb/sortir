@@ -119,7 +119,7 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/cancel/{id}", name="event_cancel", methods={"GET", "POST"})
+     * @Route("/sortie/annuler/{id}", name="event_cancel", methods={"GET", "POST"})
      */
     public function cancel($id, EventRepository $repo, Request $request, EntityManagerInterface $em, StateRepository $stateRepo, EventChangeState $ecs)
     {
