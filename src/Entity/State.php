@@ -33,7 +33,7 @@ class State
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Event::class, mappedBy="etat")
+     * @ORM\OneToMany(targetEntity=Event::class, mappedBy="state")
      */
     private $events;
 
