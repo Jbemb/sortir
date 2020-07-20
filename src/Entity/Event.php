@@ -57,6 +57,12 @@ class Event
     private $eventInfo;
 
     /**
+     * @Assert\NotBlank(message="Veuillez sélectionner un lieu")
+     */
+    private $placeChoice;
+
+
+    /**
      * @ORM\ManyToOne(targetEntity=Place::class, inversedBy="events")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -103,6 +109,22 @@ class Event
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlaceChoice()
+    {
+        return $this->placeChoice;
+    }
+
+    /**
+     * @param mixed $placeChoice
+     */
+    public function setPlaceChoice($placeChoice): void
+    {
+        $this->placeChoice = $placeChoice;
     }
 
     public function getName(): ?string

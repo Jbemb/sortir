@@ -1,8 +1,9 @@
 const city = document.getElementById('event_city');
+const placeChoice = document.getElementById('event_placeChoice');
 const place = document.getElementById('event_place');
 
 city.addEventListener('change', addPlaces);
-
+placeChoice.addEventListener('change', onChangeLieu);
 //prepare request
 let dbRequest = new XMLHttpRequest();
 
@@ -16,7 +17,7 @@ function addPlaces(evt) {
           cityId: chosenCity
        },
        function (data) {
-           place.innerText="";
+           placeChoice.innerText="";
       console.log(data)
 
           $.each(data, function(key, p){
@@ -24,13 +25,21 @@ function addPlaces(evt) {
 
              let option = document.createElement('option');
               option.text = p.name;
+              // option.setAttribute("data-value", p.id);
               option.value = p.id;
-              place.add(option);
+              placeChoice.add(option);
+              onChangeLieu();
           })
 
 
        }
    );
+}
+
+function onChangeLieu() {
+    place.value = placeChoice.options[placeChoice.selectedIndex].value;
+
+
 }
 
   /* dbRequest.open('POST', url);
