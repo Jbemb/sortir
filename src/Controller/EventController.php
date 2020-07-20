@@ -147,7 +147,7 @@ class EventController extends AbstractController
                 $em->persist($event);
                 $em->flush();
 
-                $this->addFlash('success',  'La sortie, ' . $event->getName() . ', est annulée');
+                $this->addFlash('success',  'La sortie ' . $event->getName() . ' est annulée');
                 return  $this->redirectToRoute('home');
             }
 
