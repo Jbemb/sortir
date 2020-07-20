@@ -40,7 +40,8 @@ class EventType extends AbstractType
                 'label' => 'Ville',
                 'class' => City::class,
                 'choice_label' => 'name',
-                'mapped' => false
+                'mapped' => false,
+                'placeholder' => 'Sélectionnez une ville'
             ])
             ->add('place',  ChoiceType::class, [
                // 'label' => 'Lieu',

@@ -160,11 +160,11 @@ class EventController extends AbstractController
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
 
-        //check if event has started or not to no have access if true
-        if ($ecs->hasStarted($event)) {
-            $this->addFlash('success', 'La sortie ' . $event->getName() . ' ne peut etre annulée, elle est actuellement en cours ou déjà passée!');
-            return $this->redirectToRoute('home');
-        } else {
+        //check if event has started or not to not have access if true
+        if($ecs->hasStarted($event)){
+            $this->addFlash('success', 'La sortie ' . $event->getName(). ' ne peut etre annulée, elle est actuellement en cours ou déjà passée!' );
+            return  $this->redirectToRoute('home');
+        }else{
             $cancelEventForm = $this->createForm(CancelEventType::class, $event);
             //recupere les infos du form
             $cancelEventForm->handleRequest($request);
@@ -178,7 +178,9 @@ class EventController extends AbstractController
 
                 $em->persist($event);
                 $em->flush();
-                return $this->redirectToRoute('home');
+
+                $this->addFlash('success',  'La sortie ' . $event->getName() . ' est annulée');
+                return  $this->redirectToRoute('home');
             }
 
             $cancelEventFormView = $cancelEventForm->createView();
