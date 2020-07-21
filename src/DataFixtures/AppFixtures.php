@@ -196,7 +196,8 @@ class AppFixtures extends Fixture
             $event->setCampus($event->getOrganiser()->getCampus());
             //check if date is passed and label it passed
             if($this->ecs->isFinished($event)){
-                
+                $passed= $stateRepo->findOneBy(['name' => State::PASSED]);
+                $event->setState($passed);
             } //else check if it has started and label and label ongoing
             else if(){
 
