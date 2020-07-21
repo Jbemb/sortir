@@ -29,11 +29,13 @@ class SearchType extends AbstractType
             ])
             ->add('startDate', DateType::class, [
                 'label'     => 'Entre',
-                'required'  => false
+                'required'  => false,
+                'widget'    => 'single_text',
             ])
             ->add('endDate', DateType::class, [
                 'label'     => 'et',
-                'required'  => false
+                'required'  => false,
+                'widget'    => 'single_text',
             ])
             ->add('isOrganiser', CheckboxType::class, [
                 'label'     => 'Sorties dont je suis l\'organisatrice/teur',

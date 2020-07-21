@@ -3,6 +3,22 @@
     height: 20px;
 }
 
+a:hover {
+    text-decoration: none !important;
+}
+
+
+svg {
+    width: 20px;
+    height: 20px;
+    color: #01A9B4 !important;
+    text-decoration: none;
+}
+
+svg:hover {
+    color: #086972  !important;
+}
+
 .odd {
     background-color: #DDDDDDEE;
 }

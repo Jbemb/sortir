@@ -30,45 +30,50 @@ class EventRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('e')
             ->join('e.state', 's')
             ->addSelect('s')
-            ->join('e.participants', 'p')
+            ->leftJoin('e.participants', 'p')
             ->addSelect('p')
-        ;
-
-        $qb->andWhere('e.campus = :campus')
+            ->andWhere('e.campus = :campus')
             ->setParameter('campus', $search->getCampus());
 
+        //  Keywords
         if ($search->getKeywords() != '') {
             $qb->andWhere('e.name LIKE :keywords')
                 ->setParameter('keywords', '%' . $search->getKeywords() . '%');
         }
 
+        //  Start date
         if (!is_null($search->getStartDate())) {
             $qb->andWhere('e.startDateTime > :startDate or e.startDateTime = :startDate')
 //                ->orWhere('e.startDateTime = :startDate')
                 ->setParameter('startDate', $search->getStartDate());
         }
 
+        // End date
         if (!is_null($search->getEndDate())) {
             $qb->andWhere('e.startDateTime < :endDate or e.startDateTime = :endDate')
 //                ->orWhere('e.startDateTime = :endDate')
                 ->setParameter('endDate', $search->getEndDate());
         }
 
+        //  Organiser
         if ($search->isOrganiser()) {
             $qb->andWhere('e.organiser = :organiser');
             $qb->setParameter('organiser', $user);
         }
 
+        //  Passed events
         if ($search->isPassedEvent()) {
             $qb->andWhere('s.name = :passed');
             $qb->setParameter('passed', State::PASSED);
         }
 
+        //  user has signed up
         if ($search->isSignedUp()) {
             $qb->andWhere('p = :signedUpUser');
             $qb->setParameter('signedUpUser', $user);
         }
 
+        //  user hasn't signed up
         if ($search->isNotSignedUp()) {
             $eventsToExclude = $this->createQueryBuilder('e')
                 ->join('e.participants', 'p')
