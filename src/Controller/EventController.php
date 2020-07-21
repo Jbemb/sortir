@@ -165,6 +165,12 @@ class EventController extends AbstractController
         //recup les infos de l event pour pouvoir les afficher dans le twig
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
+        //Check that the user is the organiser
+        $user = $this->security->getUser();
+        if($user != $event->getOrganiser()){
+            $this->addFlash('warning', "Vous n'avez pas le droit de annuler cette sortie");
+            return  $this->redirectToRoute('home');
+        }
 
         //check if event has started or not to no have access if true
         if($ecs->hasStarted($event)){
