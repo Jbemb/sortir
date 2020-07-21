@@ -30,13 +30,20 @@ class MainController extends AbstractController
 
         // TODO Get old search from session to always show previous search if user come back from elsewhere
 
+        dump($session->get('search'));
+        if (!is_null($session->get('search'))) {
+            $search->unserialize($session->get('search'));
+            $search->setCampus($this->getDoctrine()->getManager()->merge($search->getCampus()));
+        }
+        dump($search);
 
         $searchForm = $this->createForm(SearchType::class, $search);
 
         $searchForm->handleRequest($request);
 
         // TODO see how to keep search object in session
-        $userSearch = $request->request->get('search');
+        /*$userSearch = $request->request->get('search');
+
         unset($userSearch["submit"]);
         unset($userSearch["_token"]);
         dump($userSearch);
@@ -54,15 +61,19 @@ class MainController extends AbstractController
 //
 //        $userSearchObject = $this->get('serializer')->deserialize($userSearchJson, Search::class, 'json');
 //        dump($userSearchObject);
-
+*/
         $events = [];
-        if ($searchForm->isSubmitted())
-        {
+
+        if ($searchForm->isSubmitted()) {
+            $session->set('search', $search->serialize());
         }
-            $events = $eventRepository->search($search, $security->getUser());
+
+
+        $events = $eventRepository->search($search, $security->getUser());
+
         return $this->render('main/search.html.twig', [
-            'searchForm'    =>  $searchForm->createView(),
-            'events'        => $events
+            'searchForm' => $searchForm->createView(),
+            'events' => $events
         ]);
     }
 }

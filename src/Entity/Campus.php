@@ -6,11 +6,12 @@ use App\Repository\CampusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 
 /**
  * @ORM\Entity(repositoryClass=CampusRepository::class)
  */
-class Campus
+class Campus implements Serializable
 {
     /**
      * @ORM\Id()
@@ -125,4 +126,22 @@ class Campus
     }
 
 
+    public function serialize()
+    {
+        // TODO: Implement serialize() method.
+        return serialize([
+            $this->id,
+            $this->name,
+        ]);
+    }
+
+    public function unserialize($serialized)
+    {
+        // TODO: Implement unserialize() method.
+        $data = unserialize($serialized);
+        list(
+            $this->id,
+            $this->name,
+            ) = $data;
+    }
 }

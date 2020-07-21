@@ -2,15 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\SearchRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormTypeInterface;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Serializable;
 
-class Search
+class Search implements Serializable
 {
     private $campus;
 
@@ -123,5 +117,36 @@ class Search
         $this->isPassedEvent = $isPassedEvent;
 
         return $this;
+    }
+
+    public function serialize()
+    {
+        // TODO: Implement serialize() method.
+        return serialize([
+            $this->campus,
+            $this->startDate,
+            $this->endDate,
+            $this->keywords,
+            $this->isPassedEvent,
+            $this->isSignedUp,
+            $this->isNotSignedUp,
+            $this->isOrganiser
+        ]);
+    }
+
+    public function unserialize($serialized)
+    {
+        // TODO: Implement unserialize() method.
+        $data = unserialize($serialized);
+        list(
+            $this->campus,
+            $this->startDate,
+            $this->endDate,
+            $this->keywords,
+            $this->isPassedEvent,
+            $this->isSignedUp,
+            $this->isNotSignedUp,
+            $this->isOrganiser
+            ) = $data;
     }
 }
