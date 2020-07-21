@@ -249,7 +249,7 @@ class EventChangeState
             $archiveDate = $endTime->add(new \DateInterval('P1M'));
             //compare end time to see if we need to archive
             $now = new \DateTime();
-            if ($archiveDate > $now) {
+            if ($archiveDate < $now) {
                 $event->setIsArchived(true);
                 $em->persist($event);
             }
