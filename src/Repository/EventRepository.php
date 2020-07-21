@@ -33,7 +33,22 @@ class EventRepository extends ServiceEntityRepository
             ->leftJoin('e.participants', 'p')
             ->addSelect('p')
             ->andWhere('e.campus = :campus')
-            ->setParameter('campus', $search->getCampus());
+            ->setParameter('campus', $search->getCampus())
+        ;
+
+        //  exclude those created by other organiser in state "créée"
+        //  get first those created by other organiser in state "créée"
+        $eventsCreatedToExclude = $this->createQueryBuilder('e')
+            ->join('e.state', 's')
+            ->andWhere('e.organiser != :organiser')
+            ->setParameter('organiser', $user)
+            ->andWhere('s.name = :created')
+            ->setParameter('created', State::CREATED)
+            ->getQuery()
+            ->getResult();
+        //  exclude
+        $qb->andWhere('e NOT IN (:eventscreatedToExclude)')
+            ->setParameter('eventscreatedToExclude', $eventsCreatedToExclude);
 
         //  Keywords
         if ($search->getKeywords() != '') {
@@ -80,14 +95,10 @@ class EventRepository extends ServiceEntityRepository
                 ->where('p = :signedUpUser')
                 ->setParameter('signedUpUser', $user)
                 ->getQuery()
-                ->getResult()
-            ;
+                ->getResult();
             $qb->andWhere('e NOT IN (:eventsToExclude)')
                 ->setParameter('eventsToExclude', $eventsToExclude);
         }
-
-
-
 
         return $qb->getQuery()->getResult();
     }
