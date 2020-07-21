@@ -70,17 +70,21 @@ footer {
     margin-top: 20px;
     border-radius: 5px;
 }
+
 .alert-success {
     text-align: center;
 }
+
 .alert-warning {
     text-align: center;
 }
+
 .button_center {
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
 }
+
 .btn-primary {
     color: #fff;
     background-color: #086972;
@@ -92,12 +96,20 @@ footer {
     background-color: #01A9B4FF;
     border-color: #01A9B4FF;
 }
+
 h1 {
     text-align: center;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
 }
+
 .btn{
     margin-bottom: 1rem;
     margin-top: 1rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+.bigred{
+    color: indianred;
+    font-size: 1.5rem;
 }

@@ -28,7 +28,7 @@ class Event
     private $name;
 
     /**
-     * @Assert\GreaterThan("now")
+     * @Assert\GreaterThan("now", groups={"cancel"})
      * @ORM\Column(type="datetime")
      */
     private $startDateTime;
@@ -87,6 +87,7 @@ class Event
     private $participants;
 
     /**
+     * @Assert\NotBlank(message="Merci d'indiquer la raison de l'annulation" , groups={"cancel"})
      * @ORM\Column(type="text", nullable=true)
      */
     private $reasonDelete;
