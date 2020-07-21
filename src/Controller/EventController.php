@@ -39,7 +39,6 @@ class EventController extends AbstractController
         $user = $userRepo->findOneBy(['username' => $this->security->getUser()->getUsername()]);
         $event = new Event();
 
-
         $event->setInscriptionLimit(new \DateTime());
         $event->setStartDateTime(new \DateTime());
         $event->setOrganiser($user);
@@ -141,11 +140,20 @@ class EventController extends AbstractController
      */
     public function show($id, EventRepository $eventRepository)
     {
+        $user = $this->security->getUser();
         $event = $eventRepository->find($id);
+        if($event->getIsArchived() == true){
+            $this->addFlash('warning', 'Cette sortie est archivée');
+            return  $this->redirectToRoute('home');
+        }else if($event->getState()->getName() == 'Créée' && $event->getOrganiser() != $user){
+            $this->addFlash('warning', "Cette sortie n'est pas encore publiée");
+            return  $this->redirectToRoute('home');
+        }else{
+            return $this->render('event/show.html.twig', [
+                "event" => $event
+            ]);
+        }
 
-        return $this->render('event/show.html.twig', [
-            "event" => $event
-        ]);
     }
 
     /**

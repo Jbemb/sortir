@@ -13,6 +13,7 @@ svg {
     height: 20px;
     color: #01A9B4 !important;
     text-decoration: none;
+    margin: 5px;
 }
 
 svg:hover {

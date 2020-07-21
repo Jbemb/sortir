@@ -5,21 +5,24 @@
 {% block title %}Annuler une sortie{% endblock %}
 
 {% block main %}
-<h1>Annuler une sortie</h1>
+    <h1>Annuler une sortie</h1>
 
-    <p>Nom de la sortie: {{ event.name}} </p>
-    <p>Date de la sortie : {{ event.startDateTime|date("Y-m-d H:i:s") }} </p>
-    <p>Campus: {{ event.campus.name }} </p>
-    <p>Lieu : {{ event.place.name}} </p>
+    <p>Nom de la sortie: <span class="text-info">{{ event.name }}</span> </p>
+    <p>Date de la sortie : <span class="text-info">{{ event.startDateTime|date("Y-m-d H:i:s") }} </span></p>
+    <p>Campus: <span class="text-info">{{ event.campus.name }} </span></p>
+    <p>Lieu : <span class="text-info">{{ event.place.name }}</span> </p>
 
 
-         {{ form_start(cancelEventFormView) }}
-         {{ form_row(cancelEventFormView.reasonDelete) }}
+    <p>Date de la sortie : <span class="text-info" >{{ event.startDateTime|date("Y-m-d H:i:s") }} </span></p>
+
+    {{ form_row(cancelEventFormView.reasonDelete) }}
+    {{ form_start(cancelEventFormView) }}
     <div class="button_center">
         {{ form_row(cancelEventFormView.Enregistrer) }}
         {{ form_end(cancelEventFormView) }}
-
-     <a href="{{ path('home') }}"><button class="btn btn-secondary">Annuler</button></a>
+        <div class="form-group">
+            <a href="{{ path('home') }}" class="btn btn-primary">Annuler</a>
+        </div>
 
     </div>
 

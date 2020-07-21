@@ -4,12 +4,10 @@ namespace App\Form;
 
 use App\Entity\City;
 use App\Entity\Event;
-use App\Entity\Place;
+use App\Form\Type\PlaceHiddenType;
 use DateTime;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -49,15 +47,6 @@ class EventType extends AbstractType
                 'mapped' => false,
                 'placeholder' => 'Sélectionnez une ville'
             ])
-
-//            ->add('place', ChoiceType::class, [
-////                'mapped' => false,
-//                'label' => 'Lieu',
-//                'class' => Place::class
-////                'choices'=>[]
-//////                'class' => Place::class,
-//////              //  'choice_label' => 'name'
-//            ])
             ->add('place', PlaceHiddenType::class)
 
             ->add('maxParticipant', NumberType::class, [
