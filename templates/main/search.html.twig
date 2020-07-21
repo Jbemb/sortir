@@ -60,7 +60,7 @@
             <div class="col-2">Actions</div>
         </div>
         {% for event in events %}
-            <div class="row {{ cycle(['odd', 'even'], loop.index0) }}">
+            <div class="row {{ cycle(['odd', 'even'], loop.index0) }} py-2">
                 <div class="col-2">{{ event.id }} {{ event.name }}</div>
                 <div class="col-2">{{ event.startDateTime | date('d/m/y H:i') }}</div>
                 <div class="col-1">{{ event.inscriptionLimit | date('d/m/y') }}</div>
