@@ -176,7 +176,7 @@ class AppFixtures extends Fixture
          * Events
          */
         $eventNames = ['Natation', 'Job Dating', 'Speeding Dating', 'Balade à Vélo', 'Balade', 'Bar Hop', 'Concert de Celine',
-            'Spectacle', 'Raclette', 'Apéro', 'Pot de départ', 'Ball', 'Picnic', 'Beer Pong', 'Soirée Déguisée', 'Basketball', 'Yoga',
+            'Spectacle', 'Raclette', 'Apéro', 'Pot de départ', 'Bal', 'Picnic', 'Beer Pong', 'Soirée Déguisée', 'Basketball', 'Yoga',
             'Tennis', 'Presentation de Projet', 'Tournoi de petanque', 'Pizza Party', 'Mud Wrestling', 'Axe Throwing', 'Soutenance de Stage',
             'LAN', 'Pair Programming', 'Study Session'];
 
@@ -184,7 +184,7 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 50; $i++) {
             $event = new Event();
             $event->setName($eventNames[rand(0, count($eventNames) - 1)]);
-            $event->setStartDateTime($faker->dateTimeBetween('-40 days', '+100 days'));
+            $event->setStartDateTime($faker->dateTimeBetween('-40 days', '+150 days'));
             $date = $event->getStartDateTime();
             $event->setDuration($faker->numberBetween(30, 300));
             $event->setInscriptionLimit(date_sub($date, date_interval_create_from_date_string(rand(1, 120) . " hours")));
