@@ -33,6 +33,7 @@ class EventRepository extends ServiceEntityRepository
             ->leftJoin('e.participants', 'p')
             ->addSelect('p')
             ->andWhere('e.campus = :campus')
+            ->andWhere('e.isArchived = false')
             ->setParameter('campus', $search->getCampus())
         ;
 
