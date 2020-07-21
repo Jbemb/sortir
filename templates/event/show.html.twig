@@ -16,6 +16,16 @@
                 <br>
             </div>
 
+            {% if event.state.name == "Annulée" %}
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12 font-weight-bold bigred text-uppercase">Sortie annulée</div>
+                    <div class="col-12  font-weight-bold">Motif :</div>
+                    <div class="col-12 text-info">{{ event.reasonDelete }}</div>
+                </div>
+                <br>
+            </div>
+            {% endif %}
 
             <div class="col-md-6">
                 <p>
