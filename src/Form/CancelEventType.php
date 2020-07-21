@@ -20,13 +20,15 @@ class CancelEventType extends AbstractType
                 'label' => 'Motif : '
             ])
             ->add('annuler', SubmitType::class)
-            ->getForm();
+            ->getForm()
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
+            'validation_groups' => ['cancel'],
         ]);
     }
 }

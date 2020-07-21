@@ -8,22 +8,18 @@
     <h1>Annuler une sortie</h1>
 
     <p>Nom de la sortie: <span class="text-info">{{ event.name }}</span> </p>
-    <p>Date de la sortie : <span class="text-info">{{ event.startDateTime|date("Y-m-d H:i:s") }} </span></p>
+    <p>Date de la sortie : <span class="text-info">{{ event.startDateTime|date("d/m/Y H:i:s") }} </span></p>
     <p>Campus: <span class="text-info">{{ event.campus.name }} </span></p>
     <p>Lieu : <span class="text-info">{{ event.place.name }}</span> </p>
 
-
-    <p>Date de la sortie : <span class="text-info" >{{ event.startDateTime|date("Y-m-d H:i:s") }} </span></p>
-
-    {{ form_row(cancelEventFormView.reasonDelete) }}
     {{ form_start(cancelEventFormView) }}
+    {{ form_row(cancelEventFormView.reasonDelete) }}
     <div class="button_center">
         {{ form_row(cancelEventFormView.annuler) }}
         {{ form_end(cancelEventFormView) }}
         <div class="form-group">
             <a href="{{ path('home') }}" class="btn btn-primary">Retour</a>
         </div>
-
     </div>
 
 
