@@ -91,9 +91,9 @@ class AppFixtures extends Fixture
          * UsernamesUs
          */
 
-        $usernameUs= ['fred', 'leslie', 'janet', 'andrea'];
+        $usernameUs = ['fred', 'leslie', 'janet', 'andrea'];
 
-        foreach ($usernameUs as $username){
+        foreach ($usernameUs as $username) {
             $user = new User();
 
             $user->setUsername($username);
@@ -112,7 +112,6 @@ class AppFixtures extends Fixture
 
         }
         $manager->flush();
-
 
 
         /*
@@ -168,10 +167,10 @@ class AppFixtures extends Fixture
 
         $stateRepo = $manager->getRepository(State::class);
         $states = [
-            $stateRepo->findOneBy(['name' => State::CANCELED] ),
+            $stateRepo->findOneBy(['name' => State::CANCELED]),
             $stateRepo->findOneBy(['name' => State::CREATED]),
             $stateRepo->findOneBy(['name' => State::OPENED])
-            ];
+        ];
 
         /*
          * Events
@@ -195,31 +194,31 @@ class AppFixtures extends Fixture
             $event->setOrganiser($users[rand(0, count($users) - 1)]);
             $event->setCampus($event->getOrganiser()->getCampus());
             //check if date is passed and label it passed
-            if($this->ecs->isFinished($event)){
-                $passed= $stateRepo->findOneBy(['name' => State::PASSED]);
+            if ($this->ecs->isFinished($event)) {
+                $passed = $stateRepo->findOneBy(['name' => State::PASSED]);
                 $event->setState($passed);
             } //else check if it has started and label and label ongoing
-            else if(){
+            else if (false) {
 
-            }else if()//else if inscription date is passed it is closed
+            } else if (false)//else if inscription date is passed it is closed
             {
 
-            }else //else it is random{
+            } else //else it is random{
                 $index = $faker->biasedNumberBetween($min = 0, $max = count($states) - 1, $function = 'sqrt');
-                $event->setState($states[$index]);
-            }
-
-            $nbParticpants = rand(0, $event->getMaxParticipant());
-            for ($j = 0; $j < $nbParticpants; $j++) {
-                $event->addParticipant($users[rand(0, count($users) - 1)]);
-            }
-
-            if ($event->getState()->getName() == 'Annulée'){
-                $event->setReasonDelete($faker->sentence(30, true));
-            }
-
-            $manager->persist($event);
+            $event->setState($states[$index]);
         }
+
+        $nbParticpants = rand(0, $event->getMaxParticipant());
+        for ($j = 0; $j < $nbParticpants; $j++) {
+            $event->addParticipant($users[rand(0, count($users) - 1)]);
+        }
+
+        if ($event->getState()->getName() == 'Annulée') {
+            $event->setReasonDelete($faker->sentence(30, true));
+        }
+
+        $manager->persist($event);
+
         $manager->flush();
 
         $this->ecs->archiveEvents();
