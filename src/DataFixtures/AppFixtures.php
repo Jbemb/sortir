@@ -8,6 +8,7 @@ use App\Entity\Event;
 use App\Entity\Place;
 use App\Entity\User;
 use App\Entity\State;
+use App\Event\EventChangeState;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -16,10 +17,12 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AppFixtures extends Fixture
 {
     private $encoder;
+    private $ecs;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordEncoderInterface $encoder, EventChangeState $ecs)
     {
         $this->encoder = $encoder;
+        $this->ecs = $ecs;
     }
 
     public function load(ObjectManager $manager)
@@ -62,7 +65,10 @@ class AppFixtures extends Fixture
         /*
          * Places
          */
-        $placeNames = ['plage', 'bar', 'bowling', 'ballade', 'chez Lulu', 'Réu CDA', 'quartier du coin', 'au bar de la rue qui tourne'];
+        $placeNames = ['Petite Plage', 'Bar de la Soif', 'Bowling', 'Chemin en bois', 'Chez Lulu', 'Réu CDA', 'Quartier du Coin',
+            'Bar de la rue qui tourne', 'Grant Park', 'PMU', 'Camping du Nord', 'Elephant', 'Place de la Republic', 'Creperie de Corentin',
+            'McDonalds', 'Taco Bell', 'Beaulieu', 'Cleunay', 'Chez Mamie', 'The White House', 'The Blue House', 'Le Pont des Espions',
+            'Main Street', 'Willis Tower', 'ENI', 'Place des Lices', 'Lac du bois'];
 
 
         foreach ($placeNames as $placeName) {
@@ -151,7 +157,7 @@ class AppFixtures extends Fixture
         /*
          * States
          */
-        $stateList = ['Créée', 'Ouverte', 'Clôturée', 'Activité en cours', 'Passée', 'Annulée'];
+        $stateList = [State::ONGOING, State::CREATED, State::CANCELED, State::CLOSED, State::OPENED, State::PASSED];
         foreach ($stateList as $s) {
             $state = new State();
             $state->setName($s);
@@ -161,26 +167,46 @@ class AppFixtures extends Fixture
         $manager->flush();
 
         $stateRepo = $manager->getRepository(State::class);
-        $states = $stateRepo->findAll();
-
+        $states = [
+            $stateRepo->findOneBy(['name' => State::CANCELED] ),
+            $stateRepo->findOneBy(['name' => State::CREATED]),
+            $stateRepo->findOneBy(['name' => State::OPENED])
+            ];
 
         /*
          * Events
          */
+        $eventNames = ['Natation', 'Job Dating', 'Speeding Dating', 'Balade à Vélo', 'Balade', 'Bar Hop', 'Concert de Celine',
+            'Spectacle', 'Raclette', 'Apéro', 'Pot de départ', 'Ball', 'Picnic', 'Beer Pong', 'Soirée Déguisée', 'Basketball', 'Yoga',
+            'Tennis', 'Presentation de Projet', 'Tournoi de petanque', 'Pizza Party', 'Mud Wrestling', 'Axe Throwing', 'Soutenance de Stage',
+            'LAN', 'Pair Programming', 'Study Session'];
+
 
         for ($i = 0; $i < 50; $i++) {
             $event = new Event();
-            $event->setName($faker->sentence(5,true));
-            $event->setStartDateTime($faker->dateTimeBetween('+10 hours', '+150 days'));
+            $event->setName($eventNames[rand(0, count($eventNames) - 1)]);
+            $event->setStartDateTime($faker->dateTimeBetween('-40 days', '+100 days'));
             $date = $event->getStartDateTime();
             $event->setDuration($faker->numberBetween(30, 300));
-            $event->setInscriptionLimit(date_sub($date, date_interval_create_from_date_string(rand(1, 9) . " hours")));
+            $event->setInscriptionLimit(date_sub($date, date_interval_create_from_date_string(rand(1, 120) . " hours")));
             $event->setMaxParticipant(rand(4, 20));
             $event->setEventInfo($faker->sentence(30, true));
             $event->setPlace($places[rand(0, count($places) - 1)]);
-            $event->setCampus($campus[rand(0, count($campus) - 1)]);
             $event->setOrganiser($users[rand(0, count($users) - 1)]);
-            $event->setState($states[rand(0, count($states) - 1)]);
+            $event->setCampus($event->getOrganiser()->getCampus());
+            //check if date is passed and label it passed
+            if($this->ecs->isFinished($event)){
+                
+            } //else check if it has started and label and label ongoing
+            else if(){
+
+            }else if()//else if inscription date is passed it is closed
+            {
+
+            }else //else it is random{
+                $index = $faker->biasedNumberBetween($min = 0, $max = count($states) - 1, $function = 'sqrt');
+                $event->setState($states[$index]);
+            }
 
             $nbParticpants = rand(0, $event->getMaxParticipant());
             for ($j = 0; $j < $nbParticpants; $j++) {
@@ -194,6 +220,9 @@ class AppFixtures extends Fixture
             $manager->persist($event);
         }
         $manager->flush();
+
+        $this->ecs->archiveEvents();
+        $this->ecs->changeState(true);
     }
 
     private function setUsername($user, $count): string
