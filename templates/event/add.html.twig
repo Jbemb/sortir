@@ -14,9 +14,6 @@
     {{ form_row(eventForm.duration) }}
     {{ form_row(eventForm.eventInfo) }}
     {{ form_row(eventForm.city) }}
-    {#
-    {{ form_row(eventForm.placeChoice) }}
-    #}
 
     <div class="form-group">
         <label class="required" for="event_placeChoice">Lieu</label>
@@ -27,7 +24,7 @@
         {{ form_row(eventForm.save) }}
         {{ form_row(eventForm.saveAndAdd) }}
         <div class="form-group">
-            <a href="{{ path('home') }}"><button class="btn btn-primary">Annuler</button></a>
+            <a href="{{ path('home') }}" class="btn btn-primary">Annuler</a>
         </div>
     </div>
     {{ form_end(eventForm) }}

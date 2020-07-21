@@ -39,7 +39,6 @@ class EventController extends AbstractController
         $user = $userRepo->findOneBy(['username' => $this->security->getUser()->getUsername()]);
         $event = new Event();
 
-
         $event->setInscriptionLimit(new \DateTime());
         $event->setStartDateTime(new \DateTime());
         $event->setOrganiser($user);

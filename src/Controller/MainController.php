@@ -21,7 +21,7 @@ class MainController extends AbstractController
     {
         $search = new Search();
         // TODO add default options maybe in SearchType::class
-        $search->setIsOrganiser(true);
+//        $search->setIsOrganiser(true);
 //        $search->setIsSignedUp(true);
 //        $search->setIsNotSignedUp(true);
         $search->setCampus($this->getUser()->getCampus());
