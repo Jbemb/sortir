@@ -208,13 +208,13 @@ class AppFixtures extends Fixture
             }//else it is random
             else {
                 $index = $faker->biasedNumberBetween($min = 0, $max = count($states) - 1, $function = 'sqrt');
-                $event->setState($states[$index]);
-            }
+            $event->setState($states[$index]);
+        }
 
-            $nbParticpants = rand(0, $event->getMaxParticipant());
-            for ($j = 0; $j < $nbParticpants; $j++) {
-                $event->addParticipant($users[rand(0, count($users) - 1)]);
-            }
+        $nbParticpants = rand(0, $event->getMaxParticipant());
+        for ($j = 0; $j < $nbParticpants; $j++) {
+            $event->addParticipant($users[rand(0, count($users) - 1)]);
+        }
 
             if ($event->getState()->getName() == 'Annulée') {
                 $event->setReasonDelete($faker->sentence(30, true));
