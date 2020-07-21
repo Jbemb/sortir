@@ -140,11 +140,20 @@ class EventController extends AbstractController
      */
     public function show($id, EventRepository $eventRepository)
     {
+        $user = $this->security->getUser();
         $event = $eventRepository->find($id);
+        if($event->getIsArchived() == true){
+            $this->addFlash('warning', 'Cette sortie est archivée');
+            return  $this->redirectToRoute('home');
+        }else if($event->getState()->getName() == 'Créée' && $event->getOrganiser() != $user){
+            $this->addFlash('warning', "Cette sortie n'est pas encore publiée");
+            return  $this->redirectToRoute('home');
+        }else{
+            return $this->render('event/show.html.twig', [
+                "event" => $event
+            ]);
+        }
 
-        return $this->render('event/show.html.twig', [
-            "event" => $event
-        ]);
     }
 
     /**
@@ -156,6 +165,12 @@ class EventController extends AbstractController
         //recup les infos de l event pour pouvoir les afficher dans le twig
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
+        //Check that the user is the organiser
+        $user = $this->security->getUser();
+        if($user != $event->getOrganiser()){
+            $this->addFlash('warning', "Vous n'avez pas le droit de annuler cette sortie");
+            return  $this->redirectToRoute('home');
+        }
 
         //check if event has started or not to no have access if true
         if($ecs->hasStarted($event)){
