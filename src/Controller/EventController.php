@@ -206,16 +206,22 @@ class EventController extends AbstractController
 
 
     /**
-     * @Route("/sortie/{id}/desinscire", name="event_withdraw")
+     * @Route("/sortie/{id}/desinscrire", name="event_withdraw")
      */
     public function withdraw($id, EventRepository $repo, UserRepository $userRepo, EntityManagerInterface $em, StateRepository $stateRepo, EventChangeState $ecs)
     {
+        //get user
+        $user = $this->security->getUser();
+
         //get event
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
-        //get user
-        // TODO check if we can use $this->security->getUser() instead
-        $user = $userRepo->findOneBy(['username' => $this->security->getUser()->getUsername()]);
+
+        if (!$event->getParticipants()->contains($user)) {
+            $this->addFlash('warning', "Vous n'étiez pas inscrit à cette sortie");
+            return $this->redirectToRoute('home');
+        }
+
         //update event participants
         $event->removeParticipant($user);
         //check if inscription date is not passed and it is not full change state to open
