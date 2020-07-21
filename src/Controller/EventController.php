@@ -101,7 +101,7 @@ class EventController extends AbstractController
 
 
     /**
-     * @Route("/sortie/{id}/inscription",
+     * @Route("/sortie/{id}/sinscrire",
      *     name="event_signup",
      *     requirements={"id"="\d+"}
      *     )
@@ -142,6 +142,7 @@ class EventController extends AbstractController
     {
         $user = $this->security->getUser();
         $event = $eventRepository->find($id);
+
         if($event->getIsArchived() == true){
             $this->addFlash('warning', 'Cette sortie est archivée');
             return  $this->redirectToRoute('home');
@@ -153,11 +154,10 @@ class EventController extends AbstractController
                 "event" => $event
             ]);
         }
-
     }
 
     /**
-     * @Route("/sortie/annuler/{id}", name="event_cancel", methods={"GET", "POST"})
+     * @Route("/sortie/{id}/annuler", name="event_cancel", methods={"GET", "POST"})
      */
     public function cancel($id, EventRepository $repo, Request $request, EntityManagerInterface $em, StateRepository $stateRepo, EventChangeState $ecs)
     {
@@ -165,10 +165,11 @@ class EventController extends AbstractController
         //recup les infos de l event pour pouvoir les afficher dans le twig
         $repo = $this->getDoctrine()->getRepository(Event::class);
         $event = $repo->find($id);
+
         //Check that the user is the organiser
         $user = $this->security->getUser();
         if($user != $event->getOrganiser()){
-            $this->addFlash('warning', "Vous n'avez pas le droit de annuler cette sortie");
+            $this->addFlash('warning', "Vous n'avez pas le droit d'annuler cette sortie");
             return  $this->redirectToRoute('home');
         }
 
@@ -201,7 +202,7 @@ class EventController extends AbstractController
 
 
     /**
-     * @Route("/sortie/sedesister/{id}", name="event_withdraw")
+     * @Route("/sortie/{id}/desinscire", name="event_withdraw")
      */
     public function withdraw($id, EventRepository $repo, UserRepository $userRepo, EntityManagerInterface $em, StateRepository $stateRepo, EventChangeState $ecs)
     {
@@ -229,11 +230,18 @@ class EventController extends AbstractController
     }
 
     /**
-     * @Route("/sortie/modifier/{id}", name="event_modify", requirements={"id"="\d+"}, methods={"GET", "Post"})
+     * @Route("/sortie/{id}/modifier", name="event_modify", requirements={"id"="\d+"}, methods={"GET", "Post"})
      */
     public function modify($id, EntityManagerInterface $em, Request $request, StateRepository $stateRepo ){
         $eventRepo = $this->getDoctrine()->getRepository(Event::class);
         $event = $eventRepo->find($id);
+
+        //Check that the user is the organiser
+        $user = $this->security->getUser();
+        if($user != $event->getOrganiser()){
+            $this->addFlash('warning', "Vous n'avez pas le droit de modifier cette sortie");
+            return  $this->redirectToRoute('home');
+        }
 
         $eventPlace = $event->getPlace();
         $eventCity = $eventPlace->getCity();
