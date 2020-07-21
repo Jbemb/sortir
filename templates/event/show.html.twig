@@ -1,8 +1,11 @@
 {% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/user.css') }}">
+{% endblock %}
 
 {% block main %}
     <div class="container">
-        <h2>{{ event.name }}</h2>
+        <h1>{{ event.name }}</h1>
         <br>
         <div class="row">
             <div class="col-12">
@@ -13,76 +16,86 @@
                 <br>
             </div>
 
-            <div class="col-6">
 
-                <div class="row">
-                    <div class="col-6  font-weight-bold">Date et heure de la sortie :</div>
-                    <div class="col-6  text-info">{{ event.startDateTime | date ("d/m/y h:i:s") }}</div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-6  font-weight-bold">Date limite dincription :</div>
-                    <div class="col-6  text-info">{{ event.inscriptionLimit | date ("d/m/y") }}</div>
-
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-6 font-weight-bold">Nombre de places :</div>
-                    <div class="col-6  text-info">{{ event.maxParticipant }}</div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-6  font-weight-bold">Durée :</div>
-                    <div class="col-6  text-info">{{ event.duration }} minutes</div>
-                </div>
-                <br>
-
-                <div class="row">
-                    <div class="col-6  font-weight-bold">Campus :</div>
-                    <div class="col-6  text-info">{{ event.campus.name }}</div>
-                </div>
-                <br>
+            <div class="col-md-6">
+                <p>
+                    <span class="font-weight-bold">Date et heure de la sortie :</span>
+                    <span class="text-info">{{ event.startDateTime | date ("d/m/y h:i:s") }}</span>
+                </p>
             </div>
 
-            <div class="col-6">
-
-                <div class="row">
-                    <div class="col-6  font-weight-bold">Lieu :</div>
-                    <div class="col-6  text-info">{{ event.place.name }}</div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-6  font-weight-bold">Rue :</div>
-                    <div class="col-6  text-info">{{ event.place.street }}</div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-6  font-weight-bold">Ville :</div>
-                    <div class="col-6  text-info">{{ event.place.city.postalCode }} {{ event.place.city.name }}</div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-6  font-weight-bold">Latitude :</div>
-                    <div class="col-6  text-info">{{ event.place.latitude }}</div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-6  font-weight-bold">Longitude :</div>
-                    <div class="col-6  text-info">{{ event.place.longitude }}</div>
-                </div>
-                <br>
+            <div class="col-md-6">
+                <p>
+                    <span class="font-weight-bold">Date limite d'inscription :</span>
+                    <span class="text-info">{{ event.inscriptionLimit | date ("d/m/y") }}</span>
+                </p>
             </div>
 
+            <div class="col-md-6">
+                <p>
+                    <span class="font-weight-bold">Nombre de places :</span>
+                    <span class="text-info">{{ event.maxParticipant }}</span>
+                </p>
+            </div>
 
+            <div class="col-md-6">
+                <p>
+                    <span class="font-weight-bold">Durée :</span>
+                    <span class="text-info">{{ event.duration }} minutes</span>
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <p>
+                    <span class="font-weight-bold">Campus :</span>
+                    <span class="text-info">{{ event.campus.name }}</span>
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <p>
+                    <span class="font-weight-bold">Lieu :</span>
+                    <span class="text-info">{{ event.place.name }}</span>
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p>
+                    <span class="font-weight-bold">Rue :</span>
+                    <span class="text-info">{{ event.place.street }}</span>
+
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <p>
+                    <span class="font-weight-bold">Ville :</span>
+                    <span class="text-info">{{ event.place.city.postalCode }} {{ event.place.city.name }}</span>
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <p>
+                    <span class="font-weight-bold">Latitude :</span>
+                    <span class="text-info">{{ event.place.latitude }}</span>
+
+                </p>
+            </div>
+
+            <div class="col-md-6">
+                <p>
+                    <span class="font-weight-bold">Longitude :</span>
+                    <span class="text-info">{{ event.place.longitude }}</span>
+                </p>
+            </div>
         </div>
         <br>
-        <br>
-        <div class="row">
+
+        <div class="row mt-2">
             <div class="col-6">
                 <div>
 
 
-                    <div class="card text-white bg-info mb-3" style="max-width: 20rem;">
+                    <div class="card text-white bg-info mb-3">
                         <div class="card-header">Liste des participants</div>
                         <div class="card-body">
                             <div class="row">
@@ -91,19 +104,21 @@
                             </div>
                             {% for participant in event.participants %}
                                 <div class="row">
-                                    <div class="col-5"><a class="text-white" href="{{ path('user_profil', {'id': participant.id}) }}">{{ participant.username }}</a></div>
+                                    <div class="col-5"><a class="text-white font-italic"
+                                                          href="{{ path('user_profil', {'id': participant.id}) }}">{{ participant.username }}</a>
+                                    </div>
                                     <div class="col-7">{{ participant.firstname }} {{ participant.lastname }}</div>
                                 </div>
                             {% endfor %}
                         </div>
 
                     </div>
-                    </div>
-
-
                 </div>
+
+
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
 

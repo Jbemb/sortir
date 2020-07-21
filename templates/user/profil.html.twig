@@ -1,7 +1,10 @@
 {% extends 'base.html.twig' %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/user.css') }}">
+{% endblock %}
 {% block title %}{{ parent() }} | Profil de {{ user.username }}{% endblock %}
 {% block main %}
+
     <div class="d-flex justify-content-center">
         <h1 class="p-3">{{ user.username | capitalize }}</h1>
     </div>
@@ -10,26 +13,27 @@
             <img class="col-3" src="{{ asset('img/profil.jpg') }}" alt="photo profil">
             <div class="col-9">
                 <div class="row p-2">
-                    <div class="col-4">Prénom :</div>
-                    <div class="col-8 text-info">{{ user.firstname | capitalize }}</div>
+                    <div class="col-md-4">Prénom :</div>
+                    <div class="col-md-6 text-info">{{ user.firstname | capitalize }}</div>
                 </div>
                 <div class="row p-2">
-                    <div class="col-4">Nom :</div>
-                    <div class="col-8 text-info">{{ user.lastname | capitalize }}</div>
+                    <div class="col-md-4">Nom :</div>
+                    <div class="col-md-6 text-info">{{ user.lastname | capitalize }}</div>
                 </div>
                 <div class="row p-2">
-                    <div class="col-4">Téléphone :</div>
-                    <div class="col-8 text-info">{{ user.telephone }}</div>
+                    <div class="col-md-4">Téléphone :</div>
+                    <div class="col-md-6 text-info">{{ user.telephone }}</div>
                 </div>
                 <div class="row p-2">
-                    <div class="col-4">Email :</div>
-                    <div class="col-8 text-info">{{ user.email }}</div>
+                    <div class="col-md-4">Email :</div>
+                    <div class="col-md-6 text-info">{{ user.email }}</div>
                 </div>
                 <div class="row p-2">
-                    <div class="col-4">Campus :</div>
-                    <div class="col-8 text-info">{{ user.campus.name |capitalize }}</div>
+                    <div class="col-md-4">Campus :</div>
+                    <div class="col-md-6 text-info">{{ user.campus.name |capitalize }}</div>
                 </div>
             </div>
         </div>
     </div>
+
 {% endblock %}
