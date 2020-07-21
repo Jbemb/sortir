@@ -10,8 +10,12 @@ use App\Repository\EventRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class MainController extends AbstractController
 {
@@ -41,19 +45,29 @@ class MainController extends AbstractController
         unset($userSearch["_token"]);
         dump($userSearch);
         $session->set('userSearch', $userSearch);
-        dump($session->get('userSearch'));
-        //Retourne la représentation JSON d'une valeur
+
+//        $normalizer = new ObjectNormalizer(null, null, null, new ReflectionExtractor());
+//        $serializer = new Serializer([new DateTimeNormalizer(), $normalizer]);
+//        $userSearchObject2 = $serializer->denormalize($userSearch, Search::class, '[]');
+//        dump($userSearchObject2);
+
+        //Retourne la représentation JSON d'une valeur https://github.com/pmill/doctrine-array-hydrator
 //        $userSearchJson = json_encode($userSearch);
 //        dump($userSearchJson);
 
-//        $userSearch1 = new Search();
-//        $userSearch1->setKeywords($userSearch["keywords"]);
-//        $userSearch1->setStartDate($userSearch["startDate"]);
-//        $userSearch1->setEndDate($userSearch["endDate"]);
-//        dump($userSearch1);
-//
-//        $userSearchObject = $this->get('serializer')->deserialize($userSearchJson, Search::class, 'json');
-//        dump($userSearchObject);
+        $userSearch1 = new Search();
+        $userSearch1->setKeywords($userSearch["keywords"]);
+/*        if(!$userSearch["startDate"]=='' && !$userSearch["endDate"]==''){
+            $startDate = \DateTime::createFromFormat("d.m.Y", $userSearch["startDate"]);
+            $endDate = \DateTime::createFromFormat("d.m.Y", $userSearch["endDate"]);
+            $userSearch1->setStartDate($startDate);
+           $userSearch1->setEndDate($endDate);
+
+        }*/
+        dump($userSearch1);
+
+/*        $userSearchObject = $this->get('serializer')->deserialize($userSearchJson, Search::class, 'json');
+        dump($userSearchObject);*/
 
         $events = [];
         if ($searchForm->isSubmitted())
