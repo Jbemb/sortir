@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Form;
+namespace App\Form\Type;
 
 
+use App\Form\Transformer\PlaceToNumberTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\DataTransformerInterface;
 
 /**
  * Entity hidden custom type class definition
@@ -22,7 +22,7 @@ class PlaceHiddenType extends AbstractType
     /**
      * Constructor
      *
-     * @param DataTransformerInterface $transformer
+     * @param PlaceToNumberTransformer $transformer
      */
     public function __construct(PlaceToNumberTransformer $transformer)
     {
