@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -34,6 +35,13 @@ class UserUpdateType extends AbstractType
             ->add('email', EmailType::class, [
                 'label'=>'Email'
             ])
+
+            ->add('photo', FileType::class, [
+                'label' => 'photo',
+                'mapped' => false,
+                'required' => false
+            ])
+
             ->add('password', RepeatedType::class, [
                 'type'=> PasswordType::class,
                 'first_options'=>['label'=>'Mot de passe'],
@@ -47,7 +55,6 @@ class UserUpdateType extends AbstractType
                 'class'=> Campus::class,
                 'choice_label'=>'name',
                 'disabled'=>true,
-
             ])
 
         ;

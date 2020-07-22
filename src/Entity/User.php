@@ -68,6 +68,16 @@ class User implements UserInterface
     private $email;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private $photoName;
+
+    /**
+     * @Assert\Image(maxSize="8M")
+     */
+    private $photo;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $isActive;
@@ -215,6 +225,39 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPhotoName()
+    {
+        return $this->photoName;
+    }
+
+    /**
+     * @param mixed $photoName
+     */
+    public function setPhotoName($photoName): void
+    {
+        $this->photoName = $photoName;
+
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param mixed $photo
+     */
+    public function setPhoto($photo): void
+    {
+        $this->photo = $photo;
+    }
+
     public function getIsActive(): ?bool
     {
         return $this->isActive;
@@ -297,4 +340,5 @@ class User implements UserInterface
 
         return $this;
     }
+
 }
