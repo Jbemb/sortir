@@ -10,7 +10,11 @@
     </div>
     <div class="container">
         <div class="row">
-            <img class="col-3" src="{{ asset('img/profil.jpg') }}" alt="photo profil">
+            {% if user.photoName %}
+                <img class="col-3" src="{{ asset('uploads/photos/'~user.photoName) }}" alt="photo profil">
+            {% else %}
+                <img class="col-3" src="{{ asset('img/profil.jpg') }}" alt="photo profil">
+            {% endif %}
             <div class="col-9">
                 <div class="row p-2">
                     <div class="col-md-4">Prénom :</div>

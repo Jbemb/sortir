@@ -42,7 +42,7 @@ class UserController extends AbstractController
             $user->setPassword($encoded);
 
             $photo = $user->getPhoto();
-
+            dump($photo);
             if ($photo) {
                 $safeFilename = uniqid();
                 $newFilename = $safeFilename . "." . $photo->guessExtension();
