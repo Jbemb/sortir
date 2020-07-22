@@ -175,7 +175,7 @@ class EventController extends AbstractController
 
         //check if event has started or not to no have access if true
         if ($ecs->hasStarted($event)) {
-            $this->addFlash('success', 'La sortie ' . $event->getName() . ' ne peut etre annulée, elle est actuellement en cours ou déjà passée!');
+            $this->addFlash('warning', 'La sortie ' . $event->getName() . ' ne peut etre annulée, elle est actuellement en cours ou déjà passée!');
             return $this->redirectToRoute('home');
         } else {
 
@@ -195,6 +195,7 @@ class EventController extends AbstractController
 
                 $em->persist($event);
                 $em->flush();
+                $this->addFlash('success', 'La sortie ' . $event->getName() . ' est annulée.');
                 return $this->redirectToRoute('home');
             }
 
