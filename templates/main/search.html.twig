@@ -83,7 +83,7 @@
                         or event.state.name == constant('CANCELED', event.state)
                         or event.state.name == constant('ONGOING', event.state)
                         or event.state.name == constant('PASSED', event.state) %}
-                        <a href="{{ path('event_show', { 'id': event.id }) }}" title="Afficher">
+                        <a href="{{ path('event_show', { 'id': event.id }) }}" title="Afficher la sortie">
                             <svg class="">
                                 <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#eye') }}"/>
                             </svg>
@@ -94,7 +94,7 @@
                     {% endif %}
 
                     {% if app.user == event.organiser and event.state.name == constant('CREATED', event.state) %}
-                        <a href="{{ path('event_modify', { 'id': event.id }) }}">
+                        <a href="{{ path('event_modify', { 'id': event.id }) }}" title="Modifier la sortie">
                             <svg class="">
                                 <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#pencil-square') }}"/>
                             </svg>
@@ -105,7 +105,7 @@
                         </a>
                     {% endif %}
                     {% if app.user == event.organiser and event.state.name == constant('CREATED', event.state) %}
-                        <a href="{{ path('event_publish', { 'id': event.id }) }}">
+                        <a href="{{ path('event_publish', { 'id': event.id }) }}" title="Publier la sortie">
                             <svg class="">
                                 <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#check2-square') }}"/>
                             </svg>
@@ -115,7 +115,7 @@
                         </a>
                     {% endif %}
                     {% if app.user == event.organiser and (event.state.name == constant('CLOSED', event.state) or event.state.name == constant('OPENED', event.state)) %}
-                        <a href="{{ path('event_cancel', { 'id': event.id}) }}">
+                        <a href="{{ path('event_cancel', { 'id': event.id}) }}" title="Annuler la sortie">
                             <svg class="">
                                 <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#trash') }}"/>
                             </svg>
@@ -125,7 +125,7 @@
                         </a>
                     {% endif %}
                     {% if app.user not in event.participants and event.state.name == constant('OPENED', event.state) %}
-                        <a href="{{ path('event_signup', { 'id': event.id}) }}">
+                        <a href="{{ path('event_signup', { 'id': event.id}) }}" title="S'inscrire à la sortie">
                             <svg class="">
                                 <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#box-arrow-in-right') }}"/>
                             </svg>
@@ -136,7 +136,7 @@
                     {% endif %}
 
                     {% if app.user in event.participants and (event.state.name == constant('OPENED', event.state) or event.state.name == constant('CLOSED', event.state)) %}
-                        <a href="{{ path('event_withdraw', { 'id': event.id}) }}">
+                        <a href="{{ path('event_withdraw', { 'id': event.id}) }}" title="Se désinscrire de la sortie">
                             <svg class="">
                                 <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#box-arrow-left') }}"/>
                             </svg>
