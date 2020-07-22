@@ -35,7 +35,7 @@ class CsvImportCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output, CampusRepository $campusRepo): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $reader = Reader::createFromPath('%kernel.root_dir%/../public/csv/userImport2.csv');
@@ -45,8 +45,9 @@ class CsvImportCommand extends Command
             //create a new user
             $user = new User();
             //hydrate user
+            $role = explode(',', $row['roles']);
             $user->setUsername($row['username'])
-                ->setRoles($row['roles'])
+                ->setRoles($role)
                 ->setPassword($row['password'])
                 ->setLastName($row['last_name'])
                 ->setFirstName($row['first_name'])
@@ -56,7 +57,7 @@ class CsvImportCommand extends Command
             $this->em->persist($user);
 
 
-            $campusRepo = $this->getDoctrine()->getRepository(Campus::class);
+            $campusRepo = $this->em->getRepository(Campus::class);
             //hydrate campus
             $campus = $campusRepo->find($row['campus_id']);
             $user->setCampus($campus);
