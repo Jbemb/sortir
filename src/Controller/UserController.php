@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserUpdateType;
 use App\Repository\UserRepository;
+use claviska\SimpleImage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -32,6 +34,7 @@ class UserController extends AbstractController
     {
         $user = $this->security->getUser();
         $userUpdateForm = $this->createForm(UserUpdateType::class, $user);
+
         //récupère les infos inscrit dans le form
         $userUpdateForm->handleRequest($request);
         //vérifie la validiter du formulaire
@@ -61,20 +64,24 @@ class UserController extends AbstractController
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
                 $user->setPhotoName($newFilename);
+
             }
             $em->persist($user);
             $em->flush();
 
+
+             //use composer to install - composer require claviska/simpleimage
             /*
-             * //use composer to install - composer require claviska/simpleimage
             $image = new \claviska\SimpleImage();
+
             $image
                 ->fromFile($this->getParameter('photos_directory') . "/" . $newFilename)                     // load image.jpg
                 ->thumbnail(320, 320)                          // resize to 320x200 pixels
-                ->colorize('DarkBlue')                      // tint dark blue
-                ->toFile($this->getParameter('photos_directory') . "/thumbnails/" . $newFilename)      // convert to PNG and save a copy to new-image.png
+                ->colorize('teal')                      // tint dark blue
+                ->toFile($this->getParameter('photos_directory') . "/" . $newFilename)      // convert to PNG and save a copy to new-image.png
             ;
             */
+
             $this->addFlash("success", "Votre profil a été mise à jour.");
             return $this->redirectToRoute('home');
 
