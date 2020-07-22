@@ -267,25 +267,21 @@ class EventController extends AbstractController
 
             if ($modifyEventForm->isSubmitted() && $modifyEventForm->isValid()) {
                 $state = new State;
+                if ($modifyEventForm->get('saveAndAdd')->isClicked()) {
+                    $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
 
-                if ($modifyEventForm->get('delete')->isClicked()) {
-                    $em->remove($event);
-                    $em->flush();
-                    $this->addFlash("success", "La sortie a été supprimée");
-                } else {
-
-                    if ($modifyEventForm->get('saveAndAdd')->isClicked()) {
-                        $state = $stateRepo->findOneBy(['name' => 'Ouverte']);
-
-                    } elseif ($modifyEventForm->get('save')->isClicked()) {
-                        $state = $stateRepo->findOneBy(['name' => 'Créée']);
-                    }
-                    $event->setState($state);
-                    $em->persist($event);
-                    $em->flush();
-
-                    $this->addFlash("success", "Votre sortie a été modifiée");
+                } elseif ($modifyEventForm->get('save')->isClicked()) {
+                    $state = $stateRepo->findOneBy(['name' => 'Créée']);
+                }else{
+                    return $this->redirectToRoute('event_delete', [
+                        'id'=>$id,
+                    ]);
                 }
+                $event->setState($state);
+                $em->persist($event);
+                $em->flush();
+
+                $this->addFlash("success", "Votre sortie a été modifiée");
                 return $this->redirectToRoute('home');
             }
             return $this->render('event/modify.html.twig', [
@@ -296,5 +292,27 @@ class EventController extends AbstractController
         } else {
             return $this->redirectToRoute('home');
         }
+    }
+
+    /**
+     * @Route("/sortie/{id}/supprimer", name="event_delete", requirements={"id"="\d+"}, methods={"GET", "Post"})
+     */
+    public function delete($id, EntityManagerInterface $em, StateRepository $stateRepo)
+    {
+        $eventRepo = $this->getDoctrine()->getRepository(Event::class);
+        $event = $eventRepo->find($id);
+
+        //Check that the user is the organiser
+        $user = $this->security->getUser();
+        if ($user != $event->getOrganiser()) {
+            $this->addFlash('warning', "Vous n'avez pas le droit de modifier cette sortie");
+        } elseif($user == $event->getOrganiser()){
+        $em->remove($event);
+        $em->flush();
+        $this->addFlash("success", "La sortie a été supprimée");
+        }
+        return $this->redirectToRoute('home');
+
+
     }
 }
