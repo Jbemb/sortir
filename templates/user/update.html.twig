@@ -11,7 +11,7 @@
                 {{ form_widget(UserForm) }}
                 <div class="form-group button_center">
                     <button class="btn btn-primary" type="submit" class="btn">Enregistrer</button>
-                    <button class="btn btn-primary" type="button"><a href="{{ path('home') }}"></a>Annuler</button>
+                    <a href="{{ path('home') }}"><button class="btn btn-primary" type="button">Retour</button></a>
                 </div>
                 {{ form_end(UserForm) }}
             </div>

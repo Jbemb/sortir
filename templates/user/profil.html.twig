@@ -9,7 +9,7 @@
         <h1 class="p-3">{{ user.username | capitalize }}</h1>
     </div>
     <div class="container">
-        <div class="row">
+        <div class="row d-flex justify-content-center">
             <img class="col-3" src="{{ asset('img/profil.jpg') }}" alt="photo profil">
             <div class="col-9">
                 <div class="row p-2">
@@ -33,7 +33,9 @@
                     <div class="col-md-6 text-info">{{ user.campus.name |capitalize }}</div>
                 </div>
             </div>
+            <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">Retour</a>
         </div>
+
     </div>
 
 {% endblock %}
