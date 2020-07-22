@@ -27,14 +27,19 @@
 <div class="wrapper">
     <header class="container d-flex justify-content-between">
         <a href="{{ path('home') }}" title="Accueil"><img src="{{ asset('img/logo_title.png') }}" alt="Logo Sortir.com"></a>
-        <nav>
-            {% if(app.user) %}
-                <a href="{{ path('home') }}" title="Accueil">Accueil</a>
-                <a href="{{ path('user_update') }}" title="Mon profil">Mon profil</a>
-                <a href="{{ path('event_add') }}" title="Add Event">Ajouter une Sortie</a>
-                <a href="{{ path('app_logout') }}" title="Disconnect">Se déconnecter</a>
-            {% endif %}
-        </nav>
+        <div class="d-flex flex-column">
+            <div class="my-1 mx-2 text-right">
+                Bonjour {{ app.user.firstName }}, nous sommes le {{ "now" | date('d/m/Y') }}
+            </div>
+            <nav>
+                {% if(app.user) %}
+                    <a href="{{ path('home') }}" title="Accueil">Accueil</a>
+                    <a href="{{ path('user_update') }}" title="Mon profil">Mon profil</a>
+                    <a href="{{ path('event_add') }}" title="Add Event">Ajouter une Sortie</a>
+                    <a href="{{ path('app_logout') }}" title="Disconnect">Se déconnecter</a>
+                {% endif %}
+            </nav>
+        </div>
     </header>
 
     {# pass an array argument to get the messages of those types  #}

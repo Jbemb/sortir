@@ -3,22 +3,50 @@
     height: 20px;
 }
 
+main {
+    font-size: smaller;
+}
+
 a:hover {
     text-decoration: none !important;
 }
-
 
 svg {
     width: 20px;
     height: 20px;
     color: #01A9B4 !important;
     text-decoration: none;
-    margin: 5px;
+    margin: 0px 5px 0px 5px;
 }
 
 svg:hover {
     color: #086972  !important;
 }
+
+
+div.inline-label label {
+    margin-top: 10px;
+}
+
+
+.card {
+    background-color: #cce5ef;
+    border: none;
+}
+.card-title {
+    color: #086972;
+}
+
+.card-label {
+    color: #086972;
+}
+
+.card-body {
+    color: #01a9b4;
+}
+/*.card-body {*/
+/*    color: #01a9b4;*/
+/*}*/
 
 .odd {
     background-color: #DDDDDDEE;
