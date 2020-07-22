@@ -28,7 +28,7 @@ class PlaceController extends AbstractController
         $response = new JsonResponse($places);
         return $response;
         /*
-        return $this->render('place/index.html.twig', [
+        return $this->render('place/createUser.html.twig', [
            'results'        => $places
         ]);
         */

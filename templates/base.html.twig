@@ -32,8 +32,14 @@
                 <a href="{{ path('home') }}" title="Accueil">Accueil</a>
                 <a href="{{ path('user_update') }}" title="Mon profil">Mon profil</a>
                 <a href="{{ path('event_add') }}" title="Add Event">Ajouter une Sortie</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('create_user') }}" title="Add">Ajouter un membre</a>
+                {% endif %}
                 <a href="{{ path('app_logout') }}" title="Disconnect">Se déconnecter</a>
+
             {% endif %}
+
+
         </nav>
     </header>
 

@@ -65,7 +65,7 @@ class EventType extends AbstractType
             ])
             ->add('save', SubmitType::class, ['label' => 'Enregistrer'])
             ->add('saveAndAdd', SubmitType::class, ['label' => 'Publier la sortie'])
-            ->getForm();;
+            ->getForm();
     }
 
     public function configureOptions(OptionsResolver $resolver)
