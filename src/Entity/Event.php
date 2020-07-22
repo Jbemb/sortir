@@ -28,7 +28,7 @@ class Event
     private $name;
 
     /**
-     * @Assert\GreaterThan("now", groups={"cancel"})
+     * @Assert\GreaterThan("now")
      * @ORM\Column(type="datetime")
      */
     private $startDateTime;
@@ -41,6 +41,7 @@ class Event
 
     /**
      * @Assert\GreaterThan("yesterday")
+     * @Assert\LessThan(propertyPath="startDateTime")
      * @ORM\Column(type="date")
      */
     private $inscriptionLimit;
