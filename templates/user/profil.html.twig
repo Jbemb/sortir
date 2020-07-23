@@ -15,26 +15,26 @@
             {% else %}
                 <img class="col-md-3" src="{{ asset('img/profil.jpg') }}" alt="photo profil">
             {% endif %}
-            <div class="col-md9">
+            <div class="col-md-9">
                 <div class="row p-2">
                     <div class="col-md-4">Prénom :</div>
-                    <div class="col-md-6 text-info">{{ user.firstname | capitalize }}</div>
+                    <div class="col-md-8 text-info">{{ user.firstname | capitalize }}</div>
                 </div>
                 <div class="row p-2">
                     <div class="col-md-4">Nom :</div>
-                    <div class="col-md-6 text-info">{{ user.lastname | capitalize }}</div>
+                    <div class="col-md-8 text-info">{{ user.lastname | capitalize }}</div>
                 </div>
                 <div class="row p-2">
                     <div class="col-md-4">Téléphone :</div>
-                    <div class="col-md-6 text-info">{{ user.telephone }}</div>
+                    <div class="col-md-8 text-info">{{ user.telephone }}</div>
                 </div>
                 <div class="row p-2">
                     <div class="col-md-4">Email :</div>
-                    <div class="col-md-6 text-info">{{ user.email }}</div>
+                    <div class="col-md-8 text-info">{{ user.email }}</div>
                 </div>
                 <div class="row p-2">
                     <div class="col-md-4">Campus :</div>
-                    <div class="col-md-6 text-info">{{ user.campus.name |capitalize }}</div>
+                    <div class="col-md-8 text-info">{{ user.campus.name |capitalize }}</div>
                 </div>
             </div>
             <div class="form-group button_center p-3">
