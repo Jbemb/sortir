@@ -70,17 +70,15 @@ class UserController extends AbstractController
             $em->flush();
 
 
-             //use composer to install - composer require claviska/simpleimage
-            /*
             $image = new \claviska\SimpleImage();
 
             $image
                 ->fromFile($this->getParameter('photos_directory') . "/" . $newFilename)                     // load image.jpg
                 ->thumbnail(320, 320)                          // resize to 320x200 pixels
-                ->colorize('teal')                      // tint dark blue
+               // ->colorize('teal')                      // tint dark blue
                 ->toFile($this->getParameter('photos_directory') . "/" . $newFilename)      // convert to PNG and save a copy to new-image.png
             ;
-            */
+
 
             $this->addFlash("success", "Votre profil a été mise à jour.");
             return $this->redirectToRoute('home');
