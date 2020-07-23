@@ -26,7 +26,7 @@
 <body>
 <div class="wrapper">
     <header class="container d-flex justify-content-between">
-        <a href="{{ path('home') }}" title="Accueil"><img src="{{ asset('img/logo_title.png') }}" alt="Logo Sortir.com"></a>
+        <a href="{{ path('home') }}" title="Accueil"><img src="{{ asset('img/logo_title.png') }}" alt="Logo Sortir.com"></a>php
         <div class="d-flex flex-column">
             <div class="my-1 mx-2 text-right">
                 {% if app.user %}Bonjour {{ app.user.firstName }}, n{% else %}N{% endif %}ous sommes le {{ "now" | date('d/m/Y') }}
@@ -35,7 +35,7 @@
                 {% if(app.user) %}
                     <a href="{{ path('home') }}" title="Accueil">Accueil</a>
                     <a href="{{ path('user_update') }}" title="Mon profil">Mon profil</a>
-                    <a href="{{ path('event_add') }}" title="Add Event">Ajouter une Sortie</a>
+                    <a href="{{ path('event_add') }}" title="Add Event">Ajouter une sortie</a>
                     {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('create_user') }}" title="Add">Ajouter un membre</a>
                     {% endif %}
