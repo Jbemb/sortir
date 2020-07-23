@@ -26,10 +26,11 @@ class AdminController extends AbstractController
      */
     public function createUser(Request $request, EntityManagerInterface $em)
     {
-
-        if(!$this->isGranted("ROLE_ADMIN")){
-            throw $this->createAccessDeniedException("Vous n etes pas autorisé a acceder a cette page!");
-        }
+//  geré  dans security.yaml->c est mieux si plusieurs pages admin
+//        if(!$this->isGranted("ROLE_ADMIN")){
+//            throw $this->createAccessDeniedException("Vous n'êtes pas autorisé à acceder à cette page!");
+//
+//        }
         $newUser = new User();
         $newUser->setIsActive(true);
         $newUser->setRoles(['ROLE_USER']);
