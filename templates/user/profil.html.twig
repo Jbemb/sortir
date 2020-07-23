@@ -33,7 +33,9 @@
                     <div class="col-md-6 text-info">{{ user.campus.name |capitalize }}</div>
                 </div>
             </div>
-            <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">Retour</a>
+            <div class="form-group button_center p-3">
+                <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">Retour</a>
+            </div>
         </div>
 
     </div>
