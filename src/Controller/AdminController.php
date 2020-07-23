@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 
 class AdminController extends AbstractController
@@ -24,7 +25,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/createUser", name="create_user")
      */
-    public function createUser(Request $request, EntityManagerInterface $em)
+    public function createUser(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder)
     {
 //  geré  dans security.yaml->c est mieux si plusieurs pages admin
 //        if(!$this->isGranted("ROLE_ADMIN")){
@@ -39,9 +40,14 @@ class AdminController extends AbstractController
         $newUserForm->handleRequest($request);
 
         if ($newUserForm->isSubmitted() && $newUserForm->isValid()) {
+            //encoder le password modifier ou pas
+            $password = $newUser->getPassword();
+            $encoded = $encoder->encodePassword($newUser, $password);
+            $newUser->setPassword($encoded);
+
             $em->persist($newUser);
             $em->flush();
-
+            $this->addFlash("success", "L'utilisateur est ajouté.");
             return $this->redirectToRoute(
                 'home'
             );
