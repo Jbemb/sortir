@@ -16,6 +16,7 @@ use League\Csv\Reader;
 
 class CsvImportCommand extends Command
 {
+    // the name of the command (the part after "bin/console")
     protected static $defaultName = 'app:import:csv';
     private $em;
 
@@ -28,11 +29,8 @@ class CsvImportCommand extends Command
 
     protected function configure()
     {
-        $this
-            ->setDescription('Add a short description for your command')
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
+        $this->setDescription('Commande pour importer des utilisateurs dans la base de donnée');
+        $this->setHelp('Le pseudo et l\'adresse mail doivent être uniques.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
