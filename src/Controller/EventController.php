@@ -124,7 +124,9 @@ class EventController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Vous vous êtes inscrit à la sortie : ' . $event->getName());
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('event_show', [
+                'id'=>$id,
+            ]);
         } else {
             $this->addFlash('danger', 'Vous ne vous êtes pas inscrit à la sortie : ' . $event->getName());
             return $this->redirectToRoute('home');
