@@ -46,6 +46,11 @@
                         <li class="nav-item d-none d-sm-block">
                             <a href="{{ path('event_add') }}" title="Add Event">Ajouter une Sortie</a>
                         </li>
+                        <li class="nav-item d-none d-sm-block">
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('create_user') }}" title="Add">Ajouter un membre</a>
+                        {% endif %}
+                        </li>
                         <li class="nav-item">
                             <a href="{{ path('app_logout') }}" title="Disconnect">Se déconnecter</a>
                         </li>
