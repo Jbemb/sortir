@@ -36,6 +36,7 @@ class MainController extends AbstractController
             $search->setCampus($this->getDoctrine()->getManager()->merge($search->getCampus()));
         }
 
+
         $searchForm = $this->createForm(SearchType::class, $search);
 
         $searchForm->handleRequest($request);
