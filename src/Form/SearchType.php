@@ -19,52 +19,75 @@ class SearchType extends AbstractType
     {
         $builder
             ->add('campus', EntityType::class, [
-                'label'     => 'Campus',
-                'class'     => Campus::class,
-                'choice_label'  => 'name'
+                'label' => 'Campus',
+                'class' => Campus::class,
+                'choice_label' => 'name',
+                'attr' => [
+                    'class' => 'form-control-sm'
+                ]
             ])
             ->add('keywords', TextType::class, [
-                'label'     => 'Le nom de la sortie contient :',
-                'required'  => false
+                'label' => 'Mots clés',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control-sm'
+                ]
             ])
             ->add('startDate', DateType::class, [
-                'label'     => 'Entre',
-                'required'  => false,
-                'widget'    => 'single_text',
+                'label' => 'Entre',
+                'required' => false,
+                'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'form-control-sm'
+                ]
             ])
             ->add('endDate', DateType::class, [
-                'label'     => 'et',
-                'required'  => false,
-                'widget'    => 'single_text',
+                'label' => 'et',
+                'required' => false,
+                'widget' => 'single_text',
+                'attr' => [
+                    'class' => 'form-control-sm'
+                ]
             ])
             ->add('isOrganiser', CheckboxType::class, [
-                'label'     => 'Sorties dont je suis l\'organisatrice/teur',
-                'required'  => false
+                'label' => 'Sorties dont je suis l\'organisatrice/teur',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control-sm'
+                ]
             ])
             ->add('isSignedUp', CheckboxType::class, [
-                'label'     => 'Sorties auxquelles je suis inscrit/e',
-                'required'  => false
+                'label' => 'Sorties auxquelles je suis inscrit/e',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control-sm'
+                ]
             ])
             ->add('isNotSignedUp', CheckboxType::class, [
-                'label'     => 'Sorties auxquelles je ne suis pas inscrit/e',
-                'required'  => false
+                'label' => 'Sorties auxquelles je ne suis pas inscrit/e',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control-sm'
+                ]
             ])
             ->add('isPassedEvent', CheckboxType::class, [
-                'label'     => 'Sorties passées',
-                'required'  => false
+                'label' => 'Sorties passées',
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control-sm'
+                ]
             ])
             ->add('submit', SubmitType::class, [
-                'label'     => 'Rechercher'
+                'label' => 'Rechercher'
             ])
-            ->getForm()
-        ;
+            ->getForm();
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             // Configure your form options here
-            'data_class'    => Search::class,
+            'data_class' => Search::class,
         ]);
     }
 }

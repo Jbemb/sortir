@@ -22,12 +22,12 @@ nav {
 
 header {
     display: flex;
-    align-items: baseline;
     text-align: center;
     background-color: #01A9B4FF;
-    color: #086972;
+    color: #87DFD6;
     margin-bottom: 20px;
     border-radius: 5px;
+    font-size: smaller;
 }
 
 header img {
@@ -40,9 +40,10 @@ nav a {
     align-items: baseline;
     display: inline-block;
     text-decoration: none;
+    font-size: medium;
     color: #043136;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 
 nav a:hover {
