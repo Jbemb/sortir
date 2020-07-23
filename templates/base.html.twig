@@ -29,7 +29,7 @@
         <a href="{{ path('home') }}" title="Accueil"><img src="{{ asset('img/logo_title.png') }}" alt="Logo Sortir.com"></a>
         <div class="d-flex flex-column">
             <div class="my-1 mx-2 text-right">
-                Bonjour {{ app.user.firstName }}, nous sommes le {{ "now" | date('d/m/Y') }}
+                {% if app.user %}Bonjour {{ app.user.firstName }}, n{% else %}N{% endif %}ous sommes le {{ "now" | date('d/m/Y') }}
             </div>
             <nav>
                 {% if(app.user) %}
