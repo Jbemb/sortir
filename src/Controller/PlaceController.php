@@ -40,10 +40,9 @@ class PlaceController extends AbstractController
     public function findStreetPlace(Request $request, PlaceRepository $placeRepo){
         $placeId = $request->request->get('placeId');
 
-        $place = $placeRepo->find($placeId);
-        $street = $place->getStreet();
+        $place = $placeRepo->findPlaceById($placeId);
 
-        $response = new JsonResponse($street);
+        $response = new JsonResponse($place);
         return $response;
     }
 }
