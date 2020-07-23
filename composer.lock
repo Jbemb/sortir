@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+    "content-hash": "822a53e79d6589b5fbf4c78de5a8a3aa",
     "content-hash": "7d072f8a86fe600a2213c73b1fb05fbc",
     "packages": [
         {
@@ -1441,6 +1442,57 @@
                 "palette"
             ],
             "time": "2016-12-15T09:30:02+00:00"
+        },
+        {
+            "name": "league/csv",
+            "version": "8.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "http://nexus.depot-eni.fr:8081/repository/composer-proxy-packagist.org/league/csv/8.0.0/league-csv-8.0.0.zip",
+                "reference": "0a1b535df48507f58ed3c7ab44e72272b11163ac",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "^1.9",
+                "phpunit/phpunit": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "8.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Csv\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ignace Nyamagana Butera",
+                    "email": "nyamsprod@gmail.com",
+                    "homepage": "https://github.com/nyamsprod/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Csv data manipulation made easy in PHP",
+            "homepage": "http://csv.thephpleague.com",
+            "keywords": [
+                "csv",
+                "export",
+                "filter",
+                "import",
+                "read",
+                "write"
+            ],
+            "time": "2015-12-11T09:28:14+00:00"
         },
         {
             "name": "monolog/monolog",

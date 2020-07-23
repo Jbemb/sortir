@@ -102,6 +102,9 @@
     "fzaninotto/faker": {
         "version": "v1.9.1"
     },
+    "league/csv": {
+        "version": "8.0.0"
+    },
     "league/color-extractor": {
         "version": "0.3.2"
     },

@@ -175,7 +175,7 @@ class AppFixtures extends Fixture
         /*
          * Events
          */
-        $eventNames = ['Natation', 'Job Dating', 'Speeding Dating', 'Balade à Vélo', 'Balade', 'Bar Hop', 'Concert de Celine',
+        $eventNames = ['Natation', 'Job Dating', 'Speeding Dating', 'Ballade à Vélo', 'Ballade', 'Bar Hop', 'Concert de Celine',
             'Spectacle', 'Raclette', 'Apéro', 'Pot de départ', 'Bal', 'Picnic', 'Beer Pong', 'Soirée Déguisée', 'Basketball', 'Yoga',
             'Tennis', 'Presentation de Projet', 'Tournoi de petanque', 'Pizza Party', 'Mud Wrestling', 'Axe Throwing', 'Soutenance de Stage',
             'LAN', 'Pair Programming', 'Study Session'];

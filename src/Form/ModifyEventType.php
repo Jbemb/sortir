@@ -70,7 +70,6 @@ class ModifyEventType extends AbstractType
 
             ->add('save', SubmitType::class, ['label' => 'Enregistrer'])
             ->add('saveAndAdd', SubmitType::class, ['label' => 'Publier la sortie'])
-            ->add('delete', SubmitType::class, ['label'=>'Supprimer la sortie'])
             ->getForm();
         ;
     }
