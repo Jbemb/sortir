@@ -25,13 +25,44 @@
 </head>
 <body>
 <div class="wrapper">
-    <header class="container d-flex justify-content-between">
+    <header class="container">
+        <nav class="navbar navbar-expand-md navbar-light w-100">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sortirNavbar"
+                    aria-controls="sortir-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="{{ path('home') }}" title="Accueil"><img
+                        src="{{ asset('img/logo_title.png') }}" alt="Logo Sortir.com"></a>
+
+            <div class="collapse navbar-collapse" id="sortirNavbar">
+                {% if app.user %}
+                    <ul class="navbar-nav ml-auto mt-2 mt-md-0">
+                        <li class="nav-item">
+                            <a href="{{ path('home') }}" title="Accueil">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ path('user_update') }}" title="Mon profil">Mon profil</a>
+                        </li>
+                        <li class="nav-item d-none d-sm-block">
+                            <a href="{{ path('event_add') }}" title="Add Event">Ajouter une Sortie</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ path('app_logout') }}" title="Disconnect">Se déconnecter</a>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>
+        </nav>
+
+{#
+
         <a href="{{ path('home') }}" title="Accueil"><img src="{{ asset('img/logo_title.png') }}" alt="Logo Sortir.com"></a>
         <div class="d-flex flex-column">
             <div class="my-1 mx-2 text-right">
-                {% if app.user %}Bonjour {{ app.user.firstName }}, n{% else %}N{% endif %}ous sommes le {{ "now" | date('d/m/Y') }}
+                {% if app.user %}Bonjour {{ app.user.firstName }}, n{% else %}N{% endif %}ous sommes
+                le {{ "now" | date('d/m/Y') }}
             </div>
-            <nav>
+            <nav class="navbar navbar-expand-md">
                 {% if(app.user) %}
                     <a href="{{ path('home') }}" title="Accueil">Accueil</a>
                     <a href="{{ path('user_update') }}" title="Mon profil">Mon profil</a>
@@ -43,6 +74,7 @@
                 {% endif %}
             </nav>
         </div>
+#}
     </header>
 
     {# pass an array argument to get the messages of those types  #}
@@ -56,7 +88,7 @@
         {% endfor %}
     </div>
 
-    <main class="container px-5">
+    <main class="container">
         <div>
             {% block main %}Test{% endblock %}
         </div>

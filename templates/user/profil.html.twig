@@ -11,11 +11,11 @@
     <div class="container">
         <div class="row">
             {% if user.photoName %}
-                <img class="col-3" src="{{ asset('uploads/photos/'~user.photoName) }}" alt="photo profil">
+                <img class="col-md-3" src="{{ asset('uploads/photos/'~user.photoName) }}" alt="photo profil">
             {% else %}
-                <img class="col-3" src="{{ asset('img/profil.jpg') }}" alt="photo profil">
+                <img class="col-md-3" src="{{ asset('img/profil.jpg') }}" alt="photo profil">
             {% endif %}
-            <div class="col-9">
+            <div class="col-md9">
                 <div class="row p-2">
                     <div class="col-md-4">Prénom :</div>
                     <div class="col-md-6 text-info">{{ user.firstname | capitalize }}</div>

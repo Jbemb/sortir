@@ -20,9 +20,17 @@ nav {
     display: inline-block;
 }
 
+@media (min-width: 768px) {
+    header {
+        display: flex;
+    }
+    main .container {
+        padding-left: 3rem!important;
+        padding-right: 3rem!important;;
+    }
+}
+
 header {
-    display: flex;
-    text-align: center;
     background-color: #01A9B4FF;
     color: #87DFD6;
     margin-bottom: 20px;
