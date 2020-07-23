@@ -103,7 +103,7 @@ class AppFixtures extends Fixture
             $user->setEmail($username . '2020@campus-eni.fr');
             $user->setCampus($campus[rand(0, count($campus) - 1)]);
             $user->setIsActive(true);
-            $user->setRoles(['ROLE_USER']);
+            $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
 
             $password = $this->encoder->encodePassword($user, 'toto');
             $user->setPassword($password);
