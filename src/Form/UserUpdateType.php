@@ -37,7 +37,7 @@ class UserUpdateType extends AbstractType
             ])
 
             ->add('photo', FileType::class, [
-                'label' => 'photo',
+                'label' => 'Photo',
                 'mapped' => false,
                 'required' => false
             ])
