@@ -64,7 +64,6 @@ class CsvImportCommand extends Command
 
 
         $io->success('Les utilisateurs ont été importés.');
-        $io->error('');
 
         return 0;
     }
