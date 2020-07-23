@@ -11,144 +11,163 @@
 {% block main %}
     <h1 class="py-4 text-center">Liste des sorties</h1>
     <div id="search">
-        {{ form_start(searchForm) }}
+        {{ form_start(searchForm, { 'attr': {'class': 'form'} }) }}
         <div class="row">
-            <div class="col-6">
+            <div class="col-md-6">
                 {{ form_row(searchForm.keywords) }}
             </div>
-            <div class="col-6">
+            <div class="col-md-6">
                 {{ form_row(searchForm.campus) }}
             </div>
         </div>
         <div class="row">
-            <div class="col-6">
-                {{ form_row(searchForm.startDate) }}
-            </div>
-            <div class="col-6">
-                {{ form_row(searchForm.endDate) }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                {{ form_row(searchForm.isOrganiser) }}
-            </div>
-            <div class="col-6">
-                {{ form_row(searchForm.isSignedUp) }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                {{ form_row(searchForm.isPassedEvent) }}
-            </div>
-            <div class="col-6">
-                {{ form_row(searchForm.isNotSignedUp) }}
-            </div>
-        </div>
-
-        {{ form_end(searchForm) }}
-    </div>
-    <div id="events">
-        <h4>{{ events | length }} sorties trouvées</h4>
-        <div class="row">
-            <div class="col-2">Nom de la sortie</div>
-            <div class="col-2">Date de la sortie</div>
-            <div class="col-1">Clôture</div>
-            <div class="col-1">Inscrits / places</div>
-            <div class="col-1">Etat</div>
-            <div class="col-1">Inscrit</div>
-            <div class="col-2">Organisateur</div>
-            <div class="col-2">Actions</div>
-        </div>
-        {% for event in events %}
-            <div class="row {{ cycle(['odd', 'even'], loop.index0) }} py-2">
-                <div class="col-2">{{ event.id }} {{ event.name }}</div>
-                <div class="col-2">{{ event.startDateTime | date('d/m/y H:i') }}</div>
-                <div class="col-1">{{ event.inscriptionLimit | date('d/m/y') }}</div>
-                <div class="col-1">{{ event.participants | length }}/{{ event.maxParticipant }}</div>
-                <div class="col-1">{{ event.state.name }}</div>
-                <div class="col-1">
-                    {% if app.user in event.participants %}
-                        <svg class="">
-                            <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#person-check') }}"/>
-                        </svg>
-                        {#
-                        <img src="{{ asset('img/green-check-mark.png') }}" alt="inscrits">
-                        #}
-                    {% endif %}
-                </div>
-                <div class="col-2">{{ event.organiser.username }}</div>
-                <div class="col-2">
-                    {% if event.state.name == constant('OPENED', event.state)
-                        or event.state.name == constant('CLOSED', event.state)
-                        or event.state.name == constant('CANCELED', event.state)
-                        or event.state.name == constant('ONGOING', event.state)
-                        or event.state.name == constant('PASSED', event.state) %}
-                        <a href="{{ path('event_show', { 'id': event.id }) }}" title="Afficher">
-                            <svg class="">
-                                <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#eye') }}"/>
-                            </svg>
-                            {#
-                            Afficher
-                            #}
-                        </a>
-                    {% endif %}
-
-                    {% if app.user == event.organiser and event.state.name == constant('CREATED', event.state) %}
-                        <a href="{{ path('event_modify', { 'id': event.id }) }}">
-                            <svg class="">
-                                <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#pencil-square') }}"/>
-                            </svg>
-                            {#
-                            Modifier
-
-                            #}
-                        </a>
-                    {% endif %}
-                    {% if app.user == event.organiser and event.state.name == constant('CREATED', event.state) %}
-                        <a href="{{ path('event_publish', { 'id': event.id }) }}">
-                            <svg class="">
-                                <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#check2-square') }}"/>
-                            </svg>
-                            {#
-                            Publier
-                            #}
-                        </a>
-                    {% endif %}
-                    {% if app.user == event.organiser and (event.state.name == constant('CLOSED', event.state) or event.state.name == constant('OPENED', event.state)) %}
-                        <a href="{{ path('event_cancel', { 'id': event.id}) }}">
-                            <svg class="">
-                                <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#trash') }}"/>
-                            </svg>
-                            {#
-                            Annuler
-                            #}
-                        </a>
-                    {% endif %}
-                    {% if app.user not in event.participants and event.state.name == constant('OPENED', event.state) %}
-                        <a href="{{ path('event_signup', { 'id': event.id}) }}">
-                            <svg class="">
-                                <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#box-arrow-in-right') }}"/>
-                            </svg>
-                            {#
-                            S'inscrire
-                            #}
-                        </a>
-                    {% endif %}
-
-                    {% if app.user in event.participants and (event.state.name == constant('OPENED', event.state) or event.state.name == constant('CLOSED', event.state)) %}
-                        <a href="{{ path('event_withdraw', { 'id': event.id}) }}">
-                            <svg class="">
-                                <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#box-arrow-left') }}"/>
-                            </svg>
-                            {#
-                            Se désinscrire
-                            #}
-                        </a>
-                    {% endif %}
-
-
+            <div class="col-md-6">
+                <div class="row mb-3">
+                    <div class="col-2 inline-label">{{ form_label(searchForm.startDate) }}</div>
+                    <div class="col-10">{{ form_widget(searchForm.startDate) }}{{ form_errors(searchForm.startDate) }}</div>
                 </div>
             </div>
-        {% endfor %}
+            <div class="col-md-6">
+                <div class="row mb-3">
+                    <div class="col-2 inline-label">{{ form_label(searchForm.endDate) }}</div>
+                    <div class="col-10">{{ form_widget(searchForm.endDate) }}{{ form_errors(searchForm.endDate) }}</div>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(searchForm.isOrganiser) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(searchForm.isSignedUp) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(searchForm.isPassedEvent) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_row(searchForm.isNotSignedUp) }}
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        {{ form_row(searchForm.submit) }}
+    </div>
+    {{ form_end(searchForm) }}
+    </div>
+
+    <div id="event_card">
+        <h4 class="text-right">{{ events | length }} sorties trouvées</h4>
+        <div class="row">
+            {% for event in events %}
+                <div class="col-lg-4 col-md-6 my-3">
+                    <div class="card p-2 h-100">
+                        <div class="card-body row p-2">
+                            <div class="col-7">
+                                <h5 class="card-title">{{ event.name | upper }}</h5>
+                            </div>
+                            <div class="col-5 text-right">
+                                {% if app.user in event.participants %}
+                                    <svg class="">
+                                        <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#person-check') }}"/>
+                                    </svg>
+                                    <br/>
+                                {% endif %}
+                                {{ event.state.name }}
+                                <br/>
+                                {{ event.participants | length }}/{{ event.maxParticipant }} places
+                            </div>
+                            <div class="col-12 my-2">
+                                {{ event.eventInfo | slice(0,75) }}...
+                            </div>
+
+                            <div class="col-12">
+                                <span class="card-label">Date :</span> {{ event.startDateTime | date('d/m/y H:i') }}
+                            </div>
+                            <div class="col-12 ">
+                                <span class="card-label">Limite d'inscription :</span> {{ event.inscriptionLimit | date('d/m/y') }}
+                            </div>
+                            <div class="col-12">
+                                <span class="card-label">Organisateur :</span> {{ event.organiser.firstName }} {{ event.organiser.lastName }}
+                            </div>
+                            <div class="col-12 text-right">
+                                {% if event.state.name == constant('OPENED', event.state)
+                                    or event.state.name == constant('CLOSED', event.state)
+                                    or event.state.name == constant('CANCELED', event.state)
+                                    or event.state.name == constant('ONGOING', event.state)
+                                    or event.state.name == constant('PASSED', event.state) %}
+                                    <a href="{{ path('event_show', { 'id': event.id }) }}" title="Afficher la sortie">
+                                        <svg class="">
+                                            <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#eye') }}"/>
+                                        </svg>
+                                        {#
+                                        Afficher
+                                        #}
+                                    </a>
+                                {% endif %}
+
+                                {% if app.user == event.organiser and event.state.name == constant('CREATED', event.state) %}
+                                    <a href="{{ path('event_modify', { 'id': event.id }) }}" title="Modifier la sortie">
+                                        <svg class="">
+                                            <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#pencil-square') }}"/>
+                                        </svg>
+                                        {#
+                                        Modifier
+
+                                        #}
+                                    </a>
+                                {% endif %}
+                                {% if app.user == event.organiser and event.state.name == constant('CREATED', event.state) %}
+                                    <a href="{{ path('event_publish', { 'id': event.id }) }}" title="Publier la sortie">
+                                        <svg class="">
+                                            <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#check2-square') }}"/>
+                                        </svg>
+                                        {#
+                                        Publier
+                                        #}
+                                    </a>
+                                {% endif %}
+                                {% if app.user == event.organiser and (event.state.name == constant('CLOSED', event.state) or event.state.name == constant('OPENED', event.state)) %}
+                                    <a href="{{ path('event_cancel', { 'id': event.id}) }}" title="Annuler la sortie">
+                                        <svg class="">
+                                            <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#trash') }}"/>
+                                        </svg>
+                                        {#
+                                        Annuler
+                                        #}
+                                    </a>
+                                {% endif %}
+                                {% if app.user not in event.participants and event.state.name == constant('OPENED', event.state) %}
+                                    <a href="{{ path('event_signup', { 'id': event.id}) }}"
+                                       title="S'inscrire à la sortie">
+                                        <svg class="">
+                                            <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#box-arrow-in-right') }}"/>
+                                        </svg>
+                                        {#
+                                        S'inscrire
+                                        #}
+                                    </a>
+                                {% endif %}
+
+                                {% if app.user in event.participants and (event.state.name == constant('OPENED', event.state) or event.state.name == constant('CLOSED', event.state)) %}
+                                    <a href="{{ path('event_withdraw', { 'id': event.id}) }}"
+                                       title="Se désinscrire de la sortie">
+                                        <svg class="">
+                                            <use xlink:href="{{ asset('img/icons/bootstrap-icons.svg#box-arrow-left') }}"/>
+                                        </svg>
+                                        {#
+                                        Se désinscrire
+                                        #}
+                                    </a>
+                                {% endif %}
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
 {% endblock %}

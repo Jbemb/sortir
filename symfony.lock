@@ -1,4 +1,7 @@
 {
+    "claviska/simpleimage": {
+        "version": "3.3.4"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -98,6 +101,9 @@
     },
     "fzaninotto/faker": {
         "version": "v1.9.1"
+    },
+    "league/color-extractor": {
+        "version": "0.3.2"
     },
     "monolog/monolog": {
         "version": "1.25.4"
