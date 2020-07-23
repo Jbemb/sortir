@@ -28,6 +28,13 @@ class PlaceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
     }
+    public function findPlaceById($id){
+        return$this->createQueryBuilder('p')
+            ->andWhere("p.id = :param")
+            ->setParameter(":param", $id)
+            ->getQuery()
+            ->getArrayResult();
+    }
 
     // /**
     //  * @return Place[] Returns an array of Place objects

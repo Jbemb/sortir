@@ -1,4 +1,3 @@
-console.log('oui!')
 const place = document.getElementById('modify_event_place');
 console.log(place.value);
 
@@ -16,8 +15,9 @@ function addStreet(evt) {
             placeId:chosenPlace
         },
         function (data) {
-            console.log(data);
-            $("#rue").val(data);
+                $("#rue").val(data[0].street);
+                $('#longitude').val(data[0].longitude);
+                $('#latitude').val(data[0].latitude);
         }
     )
 }
