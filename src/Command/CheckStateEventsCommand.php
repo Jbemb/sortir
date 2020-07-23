@@ -24,7 +24,7 @@ class CheckStateEventsCommand extends Command
     protected function configure()
     {
         $this->setHelp('Configurer votre planificateur de tâche.');
-        $this->setHelp('Cette commande met à jour les états des sorties dans la base de données');
+        $this->setDescription('Cette commande met à jour les états des sorties dans la base de données');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
