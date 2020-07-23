@@ -10,7 +10,8 @@ function addPlaces() {
     //recup la valeur choisie dans la liste déroulante
     let chosenCity = city.value;
     //put postal code
-    //$('#codePostal').val(pData['latitude']);
+    console.log(city.options[city.selectedIndex].getAttribute('data-postalCode'));
+    $('#codePostal').val(city.options[city.selectedIndex].getAttribute('data-postalCode'));
 
     $.post(
         url,

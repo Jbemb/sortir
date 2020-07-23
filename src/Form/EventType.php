@@ -45,7 +45,10 @@ class EventType extends AbstractType
                 'class' => City::class,
                 'choice_label' => 'name',
                 'mapped' => false,
-                'placeholder' => 'Sélectionnez une ville'
+                'placeholder' => 'Sélectionnez une ville',
+                'choice_attr'  => function($val){
+                    return ['data-postalCode' => $val->getPostalCode()];
+                }
             ])
             ->add('place', PlaceHiddenType::class)
 
