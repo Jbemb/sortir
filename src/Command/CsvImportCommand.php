@@ -38,7 +38,7 @@ class CsvImportCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $reader = Reader::createFromPath('%kernel.root_dir%/../public/csv/userImport2.csv');
+        $reader = Reader::createFromPath('%kernel.root_dir%/../public/csv/userImport4.csv');
         $results = $reader->fetchAssoc();
 
         foreach ($results as $row){
