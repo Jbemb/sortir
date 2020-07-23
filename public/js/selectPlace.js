@@ -9,6 +9,8 @@ let placeId = place.value;
 function addPlaces() {
     //recup la valeur choisie dans la liste déroulante
     let chosenCity = city.value;
+    //put postal code
+    //$('#codePostal').val(pData['latitude']);
 
     $.post(
         url,
@@ -21,18 +23,24 @@ function addPlaces() {
             $.each(data, function (key, p) {
                 let option = document.createElement('option');
                 option.text = p.name;
-                // option.setAttribute("data-value", p.id);
+                option.setAttribute("data-value", JSON.stringify(p));
                 option.value = p.id;
                 placeChoice.appendChild(option);
                 onReload();
+            });
                 onChangePlace();
-            })
         }
     );
 }
 
 function onChangePlace() {
-    place.value = placeChoice.options[placeChoice.selectedIndex].value;
+    let p = placeChoice.options[placeChoice.selectedIndex];
+    place.value = p.value;
+
+    pData = JSON.parse(p.getAttribute('data-value'));
+    $('#street').val(pData['street']);
+    $('#latitude').val(pData['latitude']);
+    $('#longitude').val(pData['longitude']);
 }
 
 
