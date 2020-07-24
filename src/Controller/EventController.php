@@ -274,10 +274,6 @@ class EventController extends AbstractController
 
                 } elseif ($modifyEventForm->get('save')->isClicked()) {
                     $state = $stateRepo->findOneBy(['name' => 'Créée']);
-                }else{
-                    return $this->redirectToRoute('event_delete', [
-                        'id'=>$id,
-                    ]);
                 }
                 $event->setState($state);
                 $em->persist($event);
