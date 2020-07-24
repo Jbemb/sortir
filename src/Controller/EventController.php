@@ -285,7 +285,8 @@ class EventController extends AbstractController
             return $this->render('event/modify.html.twig', [
                 'modifyEventForm' => $modifyEventForm->createView(),
                 'event' => $event,
-                'eventCity' => $eventCity
+                'eventCity' => $eventCity,
+                'eventPlace' => $eventPlace,
             ]);
         } else {
             return $this->redirectToRoute('home');
